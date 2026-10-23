@@ -1,0 +1,125 @@
+import Link from "next/link";
+
+export default function AdminPedidos() {
+  return (
+    <main className="min-h-screen bg-black text-white p-10">
+
+      <h1 className="text-5xl font-bold text-yellow-500 mb-10">
+        Gestión de Pedidos
+      </h1>
+
+<div className="flex gap-4 mb-10">
+
+  <Link
+    href="/admin"
+    className="bg-zinc-700 text-white px-4 py-2 rounded-lg"
+  >
+    Dashboard
+  </Link>
+
+  <Link
+    href="/admin/productos"
+    className="bg-zinc-700 text-white px-4 py-2 rounded-lg"
+  >
+    Productos
+  </Link>
+
+  <Link
+    href="/admin/pedidos"
+    className="bg-zinc-700 text-white px-4 py-2 rounded-lg"
+  >
+    Pedidos
+  </Link>
+
+  <Link
+    href="/"
+    className="bg-zinc-700 text-white px-4 py-2 rounded-lg"
+  >
+    Ver Tienda
+  </Link>
+
+</div>
+
+      <div className="bg-zinc-900 rounded-xl p-6">
+
+        <h2 className="text-3xl font-bold mb-6">
+          Pedidos Recibidos
+        </h2>
+
+        <table className="w-full">
+
+          <thead>
+
+            <tr className="border-b border-zinc-700">
+
+              <th className="text-left p-3">
+                Pedido
+              </th>
+
+              <th className="text-left p-3">
+                Cliente
+              </th>
+
+              <th className="text-left p-3">
+                Total
+              </th>
+
+              <th className="text-left p-3">
+                Estado
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr className="border-b border-zinc-800">
+
+              <td className="p-3">
+                #1001
+              </td>
+
+              <td className="p-3">
+                Christopher Méndez
+              </td>
+
+              <td className="p-3">
+                $84.970
+              </td>
+
+              <td className="p-3 text-yellow-500">
+                Pendiente
+              </td>
+
+            </tr>
+
+            <tr>
+
+              <td className="p-3">
+                #1002
+              </td>
+
+              <td className="p-3">
+                Juan Pérez
+              </td>
+
+              <td className="p-3">
+                $39.990
+              </td>
+
+              <td className="p-3 text-green-500">
+                Pagado
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </main>
+  );
+}
