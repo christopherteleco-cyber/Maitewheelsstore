@@ -1,6 +1,20 @@
+"use client";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
+  const router = useRouter();
+
+useEffect(() => {
+
+  const auth = localStorage.getItem("auth");
+
+  if (auth !== "true") {
+    router.push("/login");
+  }
+
+}, [router]);
   return (
     <main className="min-h-screen bg-black text-white p-10">
 

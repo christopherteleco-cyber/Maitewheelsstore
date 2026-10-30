@@ -1,6 +1,38 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
+type Pedido = {
+  id: number;
+  cliente: string;
+  correo: string;
+  telefono: string;
+  direccion: string;
+  productos: string[];
+  total: number;
+  fecha: string;
+};
+
 export default function AdminPedidos() {
+
+const [pedidos, setPedidos] = useState<Pedido[]>([]);
+
+const cargarPedidos = () => {
+
+const pedidosGuardados =
+    localStorage.getItem("pedidos");
+
+  if (pedidosGuardados) {
+
+    setPedidos(
+      JSON.parse(pedidosGuardados)
+    );
+
+  }
+
+};
+
   return (
     <main className="min-h-screen bg-black text-white p-10">
 
@@ -46,6 +78,13 @@ export default function AdminPedidos() {
           Pedidos Recibidos
         </h2>
 
+ <button
+  onClick={cargarPedidos}
+  className="bg-blue-600 px-4 py-2 rounded-lg mb-6"
+>
+  Cargar Pedidos Reales
+</button>
+
         <table className="w-full">
 
           <thead>
@@ -72,49 +111,36 @@ export default function AdminPedidos() {
 
           </thead>
 
-          <tbody>
+<tbody>
 
-            <tr className="border-b border-zinc-800">
+  {pedidos.map((pedido) => (
 
-              <td className="p-3">
-                #1001
-              </td>
+    <tr
+      key={pedido.id}
+      className="border-b border-zinc-800"
+    >
 
-              <td className="p-3">
-                Christopher Méndez
-              </td>
+      <td className="p-3">
+        #{pedido.id}
+      </td>
 
-              <td className="p-3">
-                $84.970
-              </td>
+      <td className="p-3">
+        {pedido.cliente}
+      </td>
 
-              <td className="p-3 text-yellow-500">
-                Pendiente
-              </td>
+ <td className="p-3">
+  ${(pedido.total ?? 0).toLocaleString("es-CL")}
+</td>
 
-            </tr>
+      <td className="p-3 text-yellow-500">
+        Pendiente
+      </td>
 
-            <tr>
+    </tr>
 
-              <td className="p-3">
-                #1002
-              </td>
+  ))}
 
-              <td className="p-3">
-                Juan Pérez
-              </td>
-
-              <td className="p-3">
-                $39.990
-              </td>
-
-              <td className="p-3 text-green-500">
-                Pagado
-              </td>
-
-            </tr>
-
-          </tbody>
+</tbody>
 
         </table>
 

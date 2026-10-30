@@ -1,10 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+type Pedido = {
+  id: number;
+  cliente: string;
+  correo: string;
+  telefono: string;
+  direccion: string;
+  productos: string[];
+  total: number;
+  fecha: string;
+};
+
+const stockInicial: { [key: string]: number } = {
+  "Polera Oversize": 25,
+  "Creatina": 40,
+  "Medicamentos": 5,
+};
+
 export default function Home() {
 
 const [carrito, setCarrito] = useState<string[]>([]);
+const [pedidos, setPedidos] = useState<Pedido[]>([]);
+const [stock, setStock] = useState(stockInicial);
 const [nombre, setNombre] = useState("");
 const [correo, setCorreo] = useState("");
 const [telefono, setTelefono] = useState("");
@@ -12,13 +31,137 @@ const [direccion, setDireccion] = useState("");
 const precios: { [key: string]: number } = {
   "Polera Oversize": 10990,
   "Creatina": 24990,
-  "Proteína Whey": 3990,
+  "Medicamentos": 3990,
 };
+
+
+
+// useEffect(() => {
+
+//  localStorage.setItem(
+//  "pedidos",
+//    JSON.stringify(pedidos)
+//  );
+
+// }, [pedidos]);
 
 const total = carrito.reduce(
   (sum, producto) => sum + precios[producto],
   0
 );
+
+const finalizarCompra = () => {
+
+  if (carrito.length === 0) {
+    alert("Debe agregar productos");
+    return;
+  }
+
+  if (!nombre || !correo || !telefono || !direccion) {
+    alert("Debe completar todos los datos");
+    return;
+  }
+
+const nuevoPedido = {
+  id: pedidos.length + 1,
+  cliente: nombre,
+  correo,
+  telefono,
+  direccion,
+  productos: carrito,
+  total,
+  fecha: "26-10-2026",
+};
+
+ const pedidosActualizados = [
+  ...pedidos,
+  nuevoPedido,
+];
+
+setPedidos(pedidosActualizados);
+
+localStorage.setItem(
+  "pedidos",
+  JSON.stringify(pedidosActualizados)
+);
+
+const clientesGuardados = JSON.parse(
+  localStorage.getItem("clientes") || "[]"
+);
+
+const nuevoCliente = {
+  nombre,
+  correo,
+  telefono,
+  direccion,
+};
+
+clientesGuardados.push(nuevoCliente);
+
+localStorage.setItem(
+  "clientes",
+  JSON.stringify(clientesGuardados)
+);
+
+const nuevoStock = { ...stock };
+
+carrito.forEach((producto) => {
+
+  if (nuevoStock[producto] > 0) {
+
+    nuevoStock[producto] -= 1;
+
+  }
+
+});
+
+setStock(nuevoStock);
+
+localStorage.setItem(
+  "stock",
+  JSON.stringify(nuevoStock)
+);
+  alert("Pedido creado correctamente");
+<tbody>
+
+  {Object.entries(stock).map(
+    ([producto, cantidad]) => (
+
+      <tr
+        key={producto}
+        className="border-b border-zinc-800"
+      >
+
+        <td className="p-3">
+          {producto}
+        </td>
+
+        <td className="p-3">
+          {cantidad}
+        </td>
+
+        <td
+          className={`p-3 ${
+            cantidad > 5
+              ? "text-green-500"
+              : "text-yellow-500"
+          }`}
+        >
+          {cantidad > 5
+            ? "Disponible"
+            : "Stock Bajo"}
+        </td>
+
+      </tr>
+
+    )
+  )}
+
+</tbody>
+
+  setCarrito([]);
+};
+
   return (
     <main className="min-h-screen bg-black text-white">
 
@@ -139,6 +282,10 @@ Polera
 $10.990
 </p>
 
+<p className="text-sm text-gray-400">
+  Stock: {stock["Polera Oversize"]}
+</p>
+
 <button
   onClick={() =>
   setCarrito([...carrito, "Polera Oversize"])
@@ -166,6 +313,10 @@ Creatina
 
 <p className="text-yellow-500 text-2xl mt-2">
 $24.990
+</p>
+
+<p className="text-sm text-gray-400">
+  Stock: {stock["Creatina"]}
 </p>
 
 <button
@@ -197,9 +348,13 @@ Medicamentos
 $3.990
 </p>
 
+<p className="text-sm text-gray-400">
+  Stock: {stock["Medicamentos"]}
+</p>
+
 <button
   onClick={() =>
-  setCarrito([...carrito, "Proteína Whey"])
+  setCarrito([...carrito, "Medicamentos"])
 }
   className="w-full mt-4 bg-yellow-500 text-black py-3 rounded-lg font-bold"
 >
@@ -295,16 +450,69 @@ $3.990
     className="w-full p-3 rounded text-red mb-4"
   />
 
-  <button
-    onClick={() => {
-      alert(
-        `Pedido J&K\n\nCliente: ${nombre}\nCorreo: ${correo}\nTeléfono: ${telefono}\nDirección: ${direccion}\n\nTotal: $${total.toLocaleString("es-CL")}`
+<button
+  onClick={finalizarCompra}
+  className="w-full bg-green-600 py-4 rounded-lg font-bold"
+>
+  Finalizar Compra
+</button>
+
+<div className="mt-10">
+
+  <h2 className="text-3xl font-bold mb-6">
+    Pedidos Generados
+  </h2>
+
+<button
+  onClick={() => {
+
+    const pedidosGuardados =
+      localStorage.getItem("pedidos");
+
+
+
+    console.log(pedidosGuardados);
+
+    if (pedidosGuardados) {
+
+      setPedidos(
+        JSON.parse(pedidosGuardados)
       );
-    }}
-    className="w-full bg-green-600 py-4 rounded-lg font-bold"
-  >
-    Finalizar Compra
-  </button>
+
+      
+
+    } else {
+
+      alert("No hay pedidos guardados");
+
+    }
+
+  }}
+  className="bg-blue-600 px-4 py-2 rounded-lg mb-4"
+>
+  Cargar Pedidos Guardados
+</button>
+
+  {pedidos.map((pedido) => (
+
+    <div
+      key={pedido.id}
+      className="bg-zinc-900 p-4 rounded-lg mb-4"
+    >
+
+      <p>Cliente: {pedido.cliente}</p>
+
+     <p>
+  Total: ${(pedido.total ?? 0).toLocaleString("es-CL")}
+</p>
+
+      <p>Fecha: {pedido.fecha}</p>
+
+    </div>
+
+  ))}
+
+</div>
 
 </div>
 

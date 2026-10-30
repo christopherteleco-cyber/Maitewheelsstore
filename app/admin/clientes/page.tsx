@@ -1,6 +1,39 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
+type Cliente = {
+  nombre: string;
+  correo: string;
+  telefono: string;
+  direccion: string;
+};
+
 export default function AdminClientes() {
+
+  const [clientes, setClientes] =
+  useState<Cliente[]>([]);
+
+const cargarClientes = () => {
+
+  const datos =
+    localStorage.getItem("clientes");
+
+  if (datos) {
+
+    setClientes(
+      JSON.parse(datos)
+    );
+
+  } else {
+
+    alert("No hay clientes guardados");
+
+  }
+
+};
+
   return (
     <main className="min-h-screen bg-black text-white p-10">
 
@@ -46,6 +79,13 @@ export default function AdminClientes() {
           Clientes Registrados
         </h2>
 
+        <button
+  onClick={cargarClientes}
+  className="bg-blue-600 px-4 py-2 rounded-lg mb-6"
+>
+  Cargar Clientes Reales
+</button>
+
         <table className="w-full">
 
           <thead>
@@ -63,27 +103,34 @@ export default function AdminClientes() {
 
           <tbody>
 
-            <tr>
+  {clientes.map((cliente, index) => (
 
-              <td className="p-3">
-                Christopher Méndez
-              </td>
+    <tr
+      key={index}
+      className="border-b border-zinc-800"
+    >
 
-              <td className="p-3">
-                cliente@email.com
-              </td>
+      <td className="p-3">
+        {cliente.nombre}
+      </td>
 
-              <td className="p-3">
-                +56 9 1234 5678
-              </td>
+      <td className="p-3">
+        {cliente.correo}
+      </td>
 
-              <td className="p-3">
-                5
-              </td>
+      <td className="p-3">
+        {cliente.telefono}
+      </td>
 
-            </tr>
+      <td className="p-3">
+        1
+      </td>
 
-          </tbody>
+    </tr>
+
+  ))}
+
+</tbody>
 
         </table>
 

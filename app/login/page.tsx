@@ -12,20 +12,22 @@ export default function LoginPage() {
 
   const iniciarSesion = () => {
 
-    if (
-      usuario === "admin" &&
-      password === "1234"
-    ) {
+  if (
+    usuario === "admin" &&
+    password === "1234"
+  ) {
 
-      router.push("/admin");
+    localStorage.setItem("auth", "true");
 
-    } else {
+    router.push("/admin");
 
-      alert("Credenciales incorrectas");
+  } else {
 
-    }
+    alert("Credenciales incorrectas");
 
-  };
+  }
+
+};
 
   return (
 

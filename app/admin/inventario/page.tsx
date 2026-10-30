@@ -1,6 +1,35 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
+type Stock = {
+  [key: string]: number;
+};
+
 export default function InventarioPage() {
+
+const [stock, setStock] = useState<Stock>({});
+
+const cargarStock = () => {
+
+  const datos =
+    localStorage.getItem("stock");
+
+  if (datos) {
+
+    setStock(
+      JSON.parse(datos)
+    );
+
+  } else {
+
+    alert("No hay stock guardado");
+
+  }
+
+};
+
   return (
     <main className="min-h-screen bg-black text-white p-10">
 
@@ -46,6 +75,13 @@ export default function InventarioPage() {
           Stock Disponible
         </h2>
 
+        <button
+  onClick={cargarStock}
+  className="bg-blue-600 px-4 py-2 rounded-lg mb-6"
+>
+  Cargar Stock Real
+</button>
+
         <table className="w-full">
 
           <thead>
@@ -68,57 +104,42 @@ export default function InventarioPage() {
 
           </thead>
 
-          <tbody>
+        <tbody>
 
-            <tr>
+  {Object.entries(stock).map(
+    ([producto, cantidad]) => (
 
-              <td className="p-3">
-                Polera Oversize
-              </td>
+      <tr
+        key={producto}
+        className="border-b border-zinc-800"
+      >
 
-              <td className="p-3">
-                25
-              </td>
+        <td className="p-3">
+          {producto}
+        </td>
 
-              <td className="p-3 text-green-500">
-                Disponible
-              </td>
+        <td className="p-3">
+          {cantidad}
+        </td>
 
-            </tr>
+        <td
+          className={`p-3 ${
+            cantidad > 5
+              ? "text-green-500"
+              : "text-yellow-500"
+          }`}
+        >
+          {cantidad > 5
+            ? "Disponible"
+            : "Stock Bajo"}
+        </td>
 
-            <tr>
+      </tr>
 
-              <td className="p-3">
-                Creatina
-              </td>
+    )
+  )}
 
-              <td className="p-3">
-                40
-              </td>
-
-              <td className="p-3 text-green-500">
-                Disponible
-              </td>
-
-            </tr>
-
-            <tr>
-
-              <td className="p-3">
-                Proteína Whey
-              </td>
-
-              <td className="p-3">
-                5
-              </td>
-
-              <td className="p-3 text-yellow-500">
-                Stock Bajo
-              </td>
-
-            </tr>
-
-          </tbody>
+</tbody>
 
         </table>
 
