@@ -132,9 +132,45 @@ const pedidosGuardados =
   ${(pedido.total ?? 0).toLocaleString("es-CL")}
 </td>
 
-      <td className="p-3 text-yellow-500">
-        Pendiente
-      </td>
+  <td className="p-3">
+  {pedido.productos?.join(", ")}
+</td>
+
+     <td className="p-3">
+
+  <select
+    className="bg-zinc-800 p-2 rounded"
+    defaultValue="Pendiente"
+  >
+
+    <option>
+      Pendiente
+    </option>
+
+    <option>
+      Pagado
+    </option>
+
+    <option>
+      Preparando
+    </option>
+
+    <option>
+      Enviado
+    </option>
+
+    <option>
+      Entregado
+    </option>
+
+    <option>
+      Cancelado
+    </option>
+
+  </select>
+
+
+</td>
 
     </tr>
 

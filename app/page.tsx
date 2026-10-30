@@ -14,9 +14,9 @@ type Pedido = {
 };
 
 const stockInicial: { [key: string]: number } = {
-  "Polera Oversize": 25,
-  "Creatina": 40,
-  "Medicamentos": 5,
+  "Ferrari F40": 25,
+  "Lamborghini Aventador": 40,
+  "Ford Mustang 1967": 5,
 };
 
 export default function Home() {
@@ -29,9 +29,9 @@ const [correo, setCorreo] = useState("");
 const [telefono, setTelefono] = useState("");
 const [direccion, setDireccion] = useState("");
 const precios: { [key: string]: number } = {
-  "Polera Oversize": 10990,
-  "Creatina": 24990,
-  "Medicamentos": 3990,
+  "Ferrari F40": 10990,
+  "Lamborghini Aventador": 5990,
+  "Ford Mustang 1967": 3990,
 };
 
 
@@ -144,7 +144,7 @@ localStorage.setItem(
           className={`p-3 ${
             cantidad > 5
               ? "text-green-500"
-              : "text-yellow-500"
+              : "text-orange-400"
           }`}
         >
           {cantidad > 5
@@ -163,24 +163,24 @@ localStorage.setItem(
 };
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-gradient-to-b from-blue-900 via-blue-700 to-blue-500 text-white">
 
       {/* MENÚ SUPERIOR */}
-      <nav className="flex justify-between items-center p-6 border-b border-yellow-500">
+      <nav className="flex justify-between items-center p-6 border-b border-red-500">
 
-        <h1 className="text-3xl font-bold text-yellow-500">
-          J&K STORE
+        <h1 className="text-3xl font-bold text-orange-400">
+          MAITEWHEELS
         </h1>
 
-          <div className="bg-yellow-500 text-black px-4 py-2 rounded-lg font-bold">
+          <div className="bg-red-600 text-black px-4 py-2 rounded-lg font-bold">
   🛒 Carrito ({carrito.length})
 </div>
 
         <div className="flex gap-6 text-lg">
           <a href="#">Inicio</a>
-          <a href="#">Productos</a>
-          <a href="#">Suplementos</a>
-          <a href="#">Contacto</a>
+          <a href="#">Ferrari</a>
+          <a href="#">Deportivos</a>
+          <a href="#">Clásicos</a>
         </div>
 
       </nav>
@@ -188,22 +188,21 @@ localStorage.setItem(
       {/* BANNER PRINCIPAL */}
       <section className="flex flex-col justify-center items-center text-center h-[80vh] px-4">
 
-        <h1 className="text-7xl font-bold text-yellow-500 mb-4">
-          J&K STORE
+        <h1 className="text-7xl font-bold text-orange-400 mb-4">
+          MAITEWHEELS
         </h1>
 
         <h2 className="text-3xl font-semibold">
-          Ropa y Medicamentos
+          Autos de Colección
         </h2>
 
         <p className="max-w-2xl mt-6 text-gray-300">
-          Compra ropa deportiva y suplementos de calidad
-          con despacho a todo Chile.
+          Compra el auto que falta en tu colección.
         </p>
 
  <a
   href="#productos"
-  className="mt-8 bg-yellow-500 text-black px-8 py-4 rounded-xl font-bold hover:bg-yellow-400 inline-block"
+  className="mt-8 bg-red-600 text-black px-8 py-4 rounded-xl font-bold hover:bg-red-500 inline-block"
 >
   Comprar Ahora
 </a>
@@ -220,33 +219,36 @@ localStorage.setItem(
 
           <div className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition">
             <div className="text-5xl mb-4">
-              👕
+              🏎️
             </div>
 
-            <h3 className="text-2xl font-bold">
-              Ropa
-            </h3>
+          <h3 className="text-2xl font-bold">
+          Ferrari
+          </h3>
+
           </div>
 
-          <div className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition">
+        <div className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition">
             <div className="text-5xl mb-4">
-              💪
+              🚗
             </div>
 
-            <h3 className="text-2xl font-bold">
-              Suplementos
-            </h3>
-          </div>
+           <h3 className="text-2xl font-bold">
+            Deportivos
+           </h3>
 
-          <div className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition">
+        </div>
+
+        <div className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition">
             <div className="text-5xl mb-4">
-              🔥
+              🚘
             </div>
 
             <h3 className="text-2xl font-bold">
-              Ofertas
+             Clásicos
             </h3>
-          </div>
+
+        </div>
 
         </div>
 
@@ -267,30 +269,30 @@ Productos Destacados
 <div className="bg-zinc-900 rounded-xl p-6">
 
 <Image
-  src="/productos/poleras22.jpg"
-  alt="Polera"
+  src="/productos/Ferrari F40.png"
+  alt="Ferrari F40"
   width={500}
   height={300}
   className="h-56 w-full object-cover rounded-lg"
 />
 
 <h3 className="mt-4 text-xl font-bold">
-Polera
+Ferrari F40
 </h3>
 
-<p className="text-yellow-500 text-2xl mt-2">
+<p className="text-orange-400 text-2xl mt-2">
 $10.990
 </p>
 
 <p className="text-sm text-gray-400">
-  Stock: {stock["Polera Oversize"]}
+  Stock: {stock["Ferrari F40"]}
 </p>
 
 <button
   onClick={() =>
-  setCarrito([...carrito, "Polera Oversize"])
+  setCarrito([...carrito, "Ferrari F40"])
 }
-  className="w-full mt-4 bg-yellow-500 text-black py-3 rounded-lg font-bold"
+  className="w-full mt-4 bg-red-600 text-black py-3 rounded-lg font-bold"
 >
   Agregar al carrito
 </button>
@@ -300,30 +302,30 @@ $10.990
 <div className="bg-zinc-900 rounded-xl p-6">
 
 <Image
-  src="/productos/creatina.png"
-  alt="Creatina"
+  src="/productos/LAMBO.png"
+  alt="Lamborghini Aventador"
   width={500}
   height={300}
   className="h-56 w-full object-cover rounded-lg"
 />
 
 <h3 className="mt-4 text-xl font-bold">
-Creatina
+Lamborghini Aventador
 </h3>
 
-<p className="text-yellow-500 text-2xl mt-2">
+<p className="text-orange-400 text-2xl mt-2">
 $24.990
 </p>
 
 <p className="text-sm text-gray-400">
-  Stock: {stock["Creatina"]}
+  Stock: {stock["Lamborghini Aventador"]}
 </p>
 
 <button
   onClick={() =>
-  setCarrito([...carrito, "Creatina"])
+  setCarrito([...carrito, "Lamborghini Aventador"])
 }
-  className="w-full mt-4 bg-yellow-500 text-black py-3 rounded-lg font-bold"
+  className="w-full mt-4 bg-red-600 text-black py-3 rounded-lg font-bold"
 >
   Agregar al carrito
 </button>
@@ -333,30 +335,30 @@ $24.990
 <div className="bg-zinc-900 rounded-xl p-6">
 
 <Image
-  src="/productos/medicamentos.png"
-  alt="Medicamento"
+  src="/productos/Ford Mustang.png"
+  alt="Ford Mustang 1967"
   width={50}
   height={20}
   className="h-56 w-full object-cover rounded-lg"
 />
 
 <h3 className="mt-4 text-xl font-bold">
-Medicamentos
+Ford Mustang 1967
 </h3>
 
-<p className="text-yellow-500 text-2xl mt-2">
+<p className="text-orange-400 text-2xl mt-2">
 $3.990
 </p>
 
 <p className="text-sm text-gray-400">
-  Stock: {stock["Medicamentos"]}
+  Stock: {stock["Ford Mustang 1967"]}
 </p>
 
 <button
   onClick={() =>
-  setCarrito([...carrito, "Medicamentos"])
+  setCarrito([...carrito, "Ford Mustang 1967"])
 }
-  className="w-full mt-4 bg-yellow-500 text-black py-3 rounded-lg font-bold"
+  className="w-full mt-4 bg-red-600 text-black py-3 rounded-lg font-bold"
 >
   Agregar al carrito
 </button>
@@ -408,7 +410,7 @@ $3.990
 
   <div className="mt-6 text-right">
 
-  <h3 className="text-2xl font-bold text-yellow-500">
+  <h3 className="text-2xl font-bold text-orange-400">
     Total: ${total.toLocaleString("es-CL")}
   </h3>
 

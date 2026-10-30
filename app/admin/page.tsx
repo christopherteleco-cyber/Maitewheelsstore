@@ -19,7 +19,7 @@ useEffect(() => {
     <main className="min-h-screen bg-black text-white p-10">
 
       <h1 className="text-5xl font-bold text-yellow-500 mb-10">
-        Dashboard J&K Store
+        Dashboard MAITEWHEELS
       </h1>
 
 <div className="flex gap-4 mb-10">
