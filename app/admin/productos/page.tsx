@@ -1,6 +1,30 @@
 import Link from "next/link";
 
 export default function AdminProductos() {
+
+  const productos = [
+  {
+    nombre: "Ferrari F40",
+    precio: 10990,
+    stock: 2,
+    categoria: "Ferrari",
+  },
+
+  {
+    nombre: "Lamborghini Aventador",
+    precio: 5990,
+    stock: 3,
+    categoria: "Deportivos",
+  },
+
+  {
+    nombre: "Ford Mustang 1967",
+    precio: 3990,
+    stock: 5,
+    categoria: "Clásicos",
+  },
+];
+
   return (
     <main className="min-h-screen bg-black text-white p-10">
 
@@ -26,7 +50,7 @@ export default function AdminProductos() {
     </p>
 
     <h2 className="text-3xl font-bold">
-      65
+      10
     </h2>
   </div>
 
@@ -112,135 +136,53 @@ export default function AdminProductos() {
           Productos Registrados
         </h2>
 
-        <table className="w-full">
+        <div className="space-y-8">
 
-<thead>
+{["Ferrari", "Deportivos", "Clásicos"].map(
+  (categoria) => (
 
-  <tr className="border-b border-zinc-700">
-
-    <th className="text-left p-3">
-      Producto
-    </th>
-
-    <th className="text-left p-3">
-      Precio
-    </th>
-
-    <th className="text-left p-3">
-      Stock
-    </th>
-
-    <th className="text-left p-3">
-      Acciones
-    </th>
-
-  </tr>
-
-</thead>
-
-          <tbody>
-
-          <tr className="border-b border-zinc-800">
-
-  <td className="p-3">
-    Polera Oversize
-  </td>
-
-  <td className="p-3">
-    $19.990
-  </td>
-
-  <td className="p-3">
-    25
-  </td>
-
-  <td className="p-3 flex gap-2">
-
-    <button
-      className="bg-yellow-500 text-black px-3 py-1 rounded"
+    <div
+      key={categoria}
+      className="bg-zinc-800 p-6 rounded-xl"
     >
-      Editar
-    </button>
 
-    <button
-      className="bg-red-600 px-3 py-1 rounded"
-    >
-      Eliminar
-    </button>
+      <h3 className="text-xl font-bold text-orange-400 mb-4">
+        {categoria}
+      </h3>
 
-  </td>
+      {productos
+        .filter(
+          (p) =>
+            p.categoria === categoria
+        )
+        .map((producto) => (
 
-</tr>
+          <div
+            key={producto.nombre}
+            className="flex justify-between border-b border-zinc-700 py-2"
+          >
 
-<tr className="border-b border-zinc-800">
+            <span>
+              {producto.nombre}
+            </span>
 
-  <td className="p-3">
-    Creatina
-  </td>
+            <span>
+              Stock:
+              {" "}
+              {producto.stock}
+            </span>
 
-  <td className="p-3">
-    $24.990
-  </td>
+          </div>
 
-  <td className="p-3">
-    25
-  </td>
+        ))}
 
-  <td className="p-3 flex gap-2">
+    </div>
 
-    <button
-      className="bg-yellow-500 text-black px-3 py-1 rounded"
-    >
-      Editar
-    </button>
-
-    <button
-      className="bg-red-600 px-3 py-1 rounded"
-    >
-      Eliminar
-    </button>
-
-  </td>
-
-</tr>
-
-       <tr className="border-b border-zinc-800">
-
-  <td className="p-3">
-    Medicamentos
-  </td>
-
-  <td className="p-3">
-    $3.990
-  </td>
-
-  <td className="p-3">
-    40
-  </td>
-
-  <td className="p-3 flex gap-2">
-
-    <button
-      className="bg-yellow-500 text-black px-3 py-1 rounded"
-    >
-      Editar
-    </button>
-
-    <button
-      className="bg-red-600 px-3 py-1 rounded"
-    >
-      Eliminar
-    </button>
-
-  </td>
-
-</tr>
-
-          </tbody>
-
-        </table>
+))}
 
         
+        </div>
+    
 
       </div>
 
