@@ -71,7 +71,8 @@ const precios: { [key: string]: number } = {
   "Ford Mustang 1967": 3990,
 };
 
-
+const [categoriaSeleccionada, setCategoriaSeleccionada] =
+  useState("Todos");
 
 // useEffect(() => {
 
@@ -266,36 +267,59 @@ localStorage.setItem(
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-          <div className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition">
-            <div className="text-5xl mb-4">
-              🏎️
-            </div>
+          <div
+  onClick={() =>
+    setCategoriaSeleccionada("Ferrari")
+  }
+  className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition cursor-pointer"
+>
+  <div className="text-5xl mb-4">
+    🏎️
+  </div>
 
-          <h3 className="text-2xl font-bold">
-          Ferrari
-          </h3>
+  <h3 className="text-2xl font-bold">
+    Ferrari
+  </h3>
 
-          </div>
 
-        <div className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition">
-            <div className="text-5xl mb-4">
-              🚗
-            </div>
+</div>
 
-           <h3 className="text-2xl font-bold">
-            Deportivos
-           </h3>
+
+  <div className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition">
+     <div
+  onClick={() =>
+    setCategoriaSeleccionada("Deportivos")
+  }
+  className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition cursor-pointer"
+>
+    <div className="text-5xl mb-4">
+    🚗
+    </div>
+
+  <h3 className="text-2xl font-bold">
+    Deportivos
+  </h3>
+  
+  </div>
 
         </div>
 
         <div className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition">
-            <div className="text-5xl mb-4">
-              🚘
-            </div>
+     
+     <div
+  onClick={() =>
+    setCategoriaSeleccionada("Clásicos")
+  }
+  className="bg-zinc-900 p-10 rounded-xl text-center hover:scale-105 transition cursor-pointer"
+>
+  <div className="text-5xl mb-4">
+    🚘
+  </div>
 
-            <h3 className="text-2xl font-bold">
-             Clásicos
-            </h3>
+  <h3 className="text-2xl font-bold">
+    Clásicos
+  </h3>
+</div>
 
         </div>
 
@@ -313,9 +337,28 @@ localStorage.setItem(
 Productos Destacados
 </h2>
 
+<div className="flex justify-center mb-6">
+
+  <button
+    onClick={() =>
+      setCategoriaSeleccionada("Todos")
+    }
+    className="bg-red-600 px-6 py-2 rounded-lg font-bold"
+  >
+    Ver Todos
+  </button>
+
+</div>
+
 <div className="grid md:grid-cols-3 gap-8">
 
-{productos.map((producto) => (
+{productos
+  .filter(
+    (producto) =>
+      categoriaSeleccionada === "Todos" ||
+      producto.categoria === categoriaSeleccionada
+  )
+  .map((producto) => (
 
   <div
     key={producto.nombre}
