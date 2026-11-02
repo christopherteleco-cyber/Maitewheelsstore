@@ -13,17 +13,54 @@ type Pedido = {
   fecha: string;
 };
 
-const stockInicial: { [key: string]: number } = {
-  "Ferrari F40": 25,
-  "Lamborghini Aventador": 40,
-  "Ford Mustang 1967": 5,
+type Producto = {
+  nombre: string;
+  precio: number;
+  stock: number;
+  categoria: string;
+  imagen: string;
 };
+
+
 
 export default function Home() {
 
+  const [productos] = useState<Producto[]>([
+  {
+    nombre: "Ferrari F40",
+    precio: 10990,
+    stock: 3,
+    categoria: "Ferrari",
+    imagen: "/productos/Ferrari F40.png",
+  },
+
+  {
+    nombre: "Lamborghini Aventador",
+    precio: 5990,
+    stock: 2,
+    categoria: "Deportivos",
+    imagen: "/productos/LAMBO.png",
+  },
+
+  {
+    nombre: "Ford Mustang 1967",
+    precio: 3990,
+    stock: 5,
+    categoria: "Clásicos",
+    imagen: "/productos/Ford Mustang.png",
+  },
+]);
+
 const [carrito, setCarrito] = useState<string[]>([]);
 const [pedidos, setPedidos] = useState<Pedido[]>([]);
-const [stock, setStock] = useState(stockInicial);
+const [stock, setStock] = useState(
+  Object.fromEntries(
+    productos.map((p) => [
+      p.nombre,
+      p.stock,
+    ])
+  )
+);
 const [nombre, setNombre] = useState("");
 const [correo, setCorreo] = useState("");
 const [telefono, setTelefono] = useState("");
@@ -172,7 +209,7 @@ localStorage.setItem(
           MAITEWHEELS
         </h1>
 
-          <div className="bg-red-600 text-black px-4 py-2 rounded-lg font-bold">
+          <div className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold">
   🛒 Carrito ({carrito.length})
 </div>
 
@@ -186,26 +223,38 @@ localStorage.setItem(
       </nav>
 
       {/* BANNER PRINCIPAL */}
-      <section className="flex flex-col justify-center items-center text-center h-[80vh] px-4">
+      <section
+  className="relative flex flex-col justify-center items-center text-center h-[80vh] px-4 bg-cover bg-center"
+  style={{
+    backgroundImage: "url('/banner.png')",
+  }}
+>
 
-        <h1 className="text-7xl font-bold text-orange-400 mb-4">
-          MAITEWHEELS
-        </h1>
+  <div className="absolute inset-0 bg-black/75" />
 
-        <h2 className="text-3xl font-semibold">
-          Autos de Colección
-        </h2>
+<div className="relative z-10">
+
+  <h1 className="text-7xl font-extrabold text-orange-400 mb-4 drop-shadow-[0_0_15px_rgba(255,100,0,0.8)]">
+    MAITEWHEELS
+  </h1>
+
+
+       <h2 className="text-3xl font-semibold">
+  Los Mejores Autos de Colección
+</h2>
 
         <p className="max-w-2xl mt-6 text-gray-300">
-          Compra el auto que falta en tu colección.
+          Descubre Ferrari, Lamborghini y clásicos únicos para verdaderos apasionados del automovilismo.
         </p>
 
  <a
   href="#productos"
-  className="mt-8 bg-red-600 text-black px-8 py-4 rounded-xl font-bold hover:bg-red-500 inline-block"
+  className="mt-8 bg-red-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-red-500 inline-block"
 >
-  Comprar Ahora
+           Comprar Ahora
 </a>
+
+</div>
       </section>
 
       {/* CATEGORÍAS */}
@@ -266,104 +315,52 @@ Productos Destacados
 
 <div className="grid md:grid-cols-3 gap-8">
 
-<div className="bg-zinc-900 rounded-xl p-6">
+{productos.map((producto) => (
 
-<Image
-  src="/productos/Ferrari F40.png"
-  alt="Ferrari F40"
-  width={500}
-  height={300}
-  className="h-56 w-full object-cover rounded-lg"
-/>
+  <div
+    key={producto.nombre}
+    className="bg-zinc-900 rounded-xl p-6"
+  >
 
-<h3 className="mt-4 text-xl font-bold">
-Ferrari F40
-</h3>
+    <Image
+      src={producto.imagen}
+      alt={producto.nombre}
+      width={500}
+      height={300}
+      className="h-56 w-full object-cover rounded-lg"
+    />
 
-<p className="text-orange-400 text-2xl mt-2">
-$10.990
-</p>
+    <h3 className="mt-4 text-xl font-bold">
+      {producto.nombre}
+    </h3>
 
-<p className="text-sm text-gray-400">
-  Stock: {stock["Ferrari F40"]}
-</p>
+    <p className="text-orange-400 text-2xl mt-2">
+      ${producto.precio.toLocaleString("es-CL")}
+    </p>
 
-<button
-  onClick={() =>
-  setCarrito([...carrito, "Ferrari F40"])
-}
-  className="w-full mt-4 bg-red-600 text-black py-3 rounded-lg font-bold"
->
-  Agregar al carrito
-</button>
+    <p className="text-sm text-gray-400">
+      Stock: {stock[producto.nombre]}
+    </p>
 
-</div>
+    <p className="text-xs text-orange-400 mt-2">
+      {producto.categoria}
+    </p>
 
-<div className="bg-zinc-900 rounded-xl p-6">
+    <button
+      onClick={() =>
+        setCarrito([
+          ...carrito,
+          producto.nombre,
+        ])
+      }
+      className="w-full mt-4 bg-red-600 text-white py-3 rounded-lg font-bold"
+    >
+      Agregar al carrito
+    </button>
 
-<Image
-  src="/productos/LAMBO.png"
-  alt="Lamborghini Aventador"
-  width={500}
-  height={300}
-  className="h-56 w-full object-cover rounded-lg"
-/>
+  </div>
 
-<h3 className="mt-4 text-xl font-bold">
-Lamborghini Aventador
-</h3>
-
-<p className="text-orange-400 text-2xl mt-2">
-$24.990
-</p>
-
-<p className="text-sm text-gray-400">
-  Stock: {stock["Lamborghini Aventador"]}
-</p>
-
-<button
-  onClick={() =>
-  setCarrito([...carrito, "Lamborghini Aventador"])
-}
-  className="w-full mt-4 bg-red-600 text-black py-3 rounded-lg font-bold"
->
-  Agregar al carrito
-</button>
-
-</div>
-
-<div className="bg-zinc-900 rounded-xl p-6">
-
-<Image
-  src="/productos/Ford Mustang.png"
-  alt="Ford Mustang 1967"
-  width={50}
-  height={20}
-  className="h-56 w-full object-cover rounded-lg"
-/>
-
-<h3 className="mt-4 text-xl font-bold">
-Ford Mustang 1967
-</h3>
-
-<p className="text-orange-400 text-2xl mt-2">
-$3.990
-</p>
-
-<p className="text-sm text-gray-400">
-  Stock: {stock["Ford Mustang 1967"]}
-</p>
-
-<button
-  onClick={() =>
-  setCarrito([...carrito, "Ford Mustang 1967"])
-}
-  className="w-full mt-4 bg-red-600 text-black py-3 rounded-lg font-bold"
->
-  Agregar al carrito
-</button>
-
-</div>
+))}
 
 </div>
 
