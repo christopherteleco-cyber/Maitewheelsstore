@@ -1,12 +1,19 @@
 "use client";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
   const router = useRouter();
 
+const [clientes, setClientes] = useState([]);
+
+const [pedidos, setPedidos] = useState([]);
+
+const [productos, setProductos] = useState([]);
+
 useEffect(() => {
+
 
   const auth = localStorage.getItem("auth");
 
@@ -14,7 +21,41 @@ useEffect(() => {
     router.push("/login");
   }
 
+const clientesGuardados =
+  localStorage.getItem("clientes");
+
+if (clientesGuardados) {
+
+  setClientes(
+    JSON.parse(clientesGuardados)
+  );
+
+}
+
+const pedidosGuardados =
+  localStorage.getItem("pedidos");
+
+if (pedidosGuardados) {
+
+  setPedidos(
+    JSON.parse(pedidosGuardados)
+  );
+
+}
+
+const productosGuardados =
+  localStorage.getItem("productos");
+
+if (productosGuardados) {
+
+  setProductos(
+    JSON.parse(productosGuardados)
+  );
+
+}
+
 }, [router]);
+
   return (
     <main className="min-h-screen bg-black text-white p-10">
 
@@ -57,10 +98,13 @@ useEffect(() => {
       <div className="grid md:grid-cols-4 gap-6">
 
         <div className="bg-zinc-900 p-6 rounded-xl">
-          <h2 className="text-lg">Pedidos</h2>
-          <p className="text-4xl font-bold text-yellow-500">
-            12
-          </p>
+
+       <h2 className="text-lg">Pedidos</h2>
+
+<p className="text-4xl font-bold text-yellow-500">
+  {pedidos.length}
+</p>
+
         </div>
 
         <div className="bg-zinc-900 p-6 rounded-xl">
@@ -71,17 +115,23 @@ useEffect(() => {
         </div>
 
         <div className="bg-zinc-900 p-6 rounded-xl">
+          
           <h2 className="text-lg">Clientes</h2>
-          <p className="text-4xl font-bold text-blue-500">
-            8
-          </p>
+
+<p className="text-4xl font-bold text-blue-500">
+  {clientes.length}
+</p>
+
+          
         </div>
 
         <div className="bg-zinc-900 p-6 rounded-xl">
-          <h2 className="text-lg">Productos</h2>
-          <p className="text-4xl font-bold text-red-500">
-            125
-          </p>
+
+<h2 className="text-lg">Productos</h2>
+<p className="text-4xl font-bold text-red-500">
+  {productos.length}
+</p>
+
         </div>
 
       </div>

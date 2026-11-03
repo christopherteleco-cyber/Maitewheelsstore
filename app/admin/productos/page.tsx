@@ -208,7 +208,9 @@ const eliminarProducto = (
       Productos
     </p>
 
-{productos.length}
+<h2 className="text-3xl font-bold">
+  {productos.length}
+</h2>
     
   </div>
 
@@ -234,9 +236,14 @@ const eliminarProducto = (
       Inventario Bajo
     </p>
 
-    <h2 className="text-3xl font-bold text-yellow-500">
-      1
-    </h2>
+   <h2 className="text-3xl font-bold text-yellow-500">
+  {
+    productos.filter(
+      (producto) =>
+        producto.stock <= 2
+    ).length
+  }
+</h2>
 
   </div>
 
@@ -376,10 +383,14 @@ const eliminarProducto = (
       </h3>
 
       {productos
-        .filter(
-          (p) =>
-            p.categoria === categoria
-        )
+     .filter(
+  (p) =>
+    p.categoria === categoria
+)
+.sort(
+  (a, b) =>
+    a.stock - b.stock
+)
         .map((producto) => (
 
           <div
@@ -393,9 +404,46 @@ const eliminarProducto = (
 
 <div className="flex gap-3 items-center">
 
-  <span>
+<div className="flex flex-col">
+
+  <span
+    className={
+      producto.stock <= 2
+        ? "text-red-400"
+        : "text-green-400"
+    }
+  >
     Stock: {producto.stock}
   </span>
+
+  <span
+  className={
+    producto.stock <= 2
+      ? "text-red-400 text-sm"
+      : "text-green-400 text-sm"
+  }
+>
+  {
+    producto.stock <= 2
+      ? "⚠ Stock Bajo"
+      : "✅ Disponible"
+  }
+</span>
+
+
+  <span
+    className={
+      producto.stock <= 2
+        ? "text-red-400"
+        : "text-green-400"
+    }
+  >
+    {producto.stock <= 2
+      ? "Stock Bajo"
+      : "Disponible"}
+  </span>
+
+</div>
 
   <button
   onClick={() =>
