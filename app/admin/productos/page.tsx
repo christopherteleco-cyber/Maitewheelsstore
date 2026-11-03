@@ -17,6 +17,10 @@ const [categoria, setCategoria] = useState("Ferrari");
 
 const [imagen, setImagen] = useState("");
 
+const [productoEditando, setProductoEditando] =
+  useState<string | null>(null);
+
+
 const [productos, setProductos] = useState([
   {
     nombre: "Ferrari F40",
@@ -60,7 +64,10 @@ useEffect(() => {
 
 const agregarProducto = () => {
 
+
   if (!nombre) return;
+
+  
 
 const productosActualizados = [
   ...productos,
@@ -88,6 +95,77 @@ localStorage.setItem(
   "productos",
   JSON.stringify(productosActualizados)
 );
+
+  setNombre("");
+  setPrecio("");
+  setStockNuevo("");
+  setImagen("");
+
+};
+
+const editarProducto = (producto: {
+  nombre: string;
+  precio: number;
+  stock: number;
+  categoria: string;
+  imagen: string;
+}) => {
+
+  setNombre(producto.nombre);
+
+  setPrecio(
+    producto.precio.toString()
+  );
+
+  setStockNuevo(
+    producto.stock.toString()
+  );
+
+  setCategoria(
+    producto.categoria
+  );
+
+  setImagen(
+    producto.imagen
+      ?.replace("/productos/", "")
+      || ""
+  );
+
+  setProductoEditando(
+    producto.nombre
+  );
+
+};
+
+const actualizarProducto = () => {
+
+  const productosActualizados =
+    productos.map((producto) =>
+
+      producto.nombre === productoEditando
+        ? {
+            ...producto,
+            nombre,
+            precio: Number(precio),
+            stock: Number(stockNuevo),
+            categoria,
+            imagen:
+              imagen !== ""
+                ? `/productos/${imagen}`
+                : producto.imagen,
+          }
+        : producto
+
+    );
+
+  setProductos(productosActualizados);
+
+  localStorage.setItem(
+    "productos",
+    JSON.stringify(productosActualizados)
+  );
+
+  setProductoEditando(null);
 
   setNombre("");
   setPrecio("");
@@ -260,11 +338,20 @@ const eliminarProducto = (
 />
 
 <button
-  onClick={agregarProducto}
+  onClick={
+    productoEditando
+      ? actualizarProducto
+      : agregarProducto
+  }
   className="bg-green-600 px-6 py-3 rounded-lg font-bold"
 >
-  Guardar Producto
+  {
+    productoEditando
+      ? "Actualizar Producto"
+      : "Guardar Producto"
+  }
 </button>
+
 
       </div>
 
@@ -309,6 +396,15 @@ const eliminarProducto = (
   <span>
     Stock: {producto.stock}
   </span>
+
+  <button
+  onClick={() =>
+    editarProducto(producto)
+  }
+  className="bg-yellow-500 text-black px-3 py-1 rounded"
+>
+  Editar
+</button>
 
 <button
   onClick={() =>
