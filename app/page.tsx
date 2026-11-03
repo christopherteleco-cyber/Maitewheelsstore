@@ -25,31 +25,8 @@ type Producto = {
 
 export default function Home() {
 
-  const [productos] = useState<Producto[]>([
-  {
-    nombre: "Ferrari F40",
-    precio: 10990,
-    stock: 3,
-    categoria: "Ferrari",
-    imagen: "/productos/Ferrari F40.png",
-  },
-
-  {
-    nombre: "Lamborghini Aventador",
-    precio: 5990,
-    stock: 2,
-    categoria: "Deportivos",
-    imagen: "/productos/LAMBO.png",
-  },
-
-  {
-    nombre: "Ford Mustang 1967",
-    precio: 3990,
-    stock: 5,
-    categoria: "Clásicos",
-    imagen: "/productos/Ford Mustang.png",
-  },
-]);
+  const [productos, setProductos] =
+  useState<Producto[]>([]);
 
 const [carrito, setCarrito] = useState<string[]>([]);
 const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -65,6 +42,50 @@ const [nombre, setNombre] = useState("");
 const [correo, setCorreo] = useState("");
 const [telefono, setTelefono] = useState("");
 const [direccion, setDireccion] = useState("");
+
+useEffect(() => {
+
+  const productosGuardados =
+    localStorage.getItem("productos");
+
+  if (productosGuardados) {
+
+    setProductos(
+      JSON.parse(productosGuardados)
+    );
+
+  } else {
+
+    setProductos([
+      {
+        nombre: "Ferrari F40",
+        precio: 10990,
+        stock: 3,
+        categoria: "Ferrari",
+        imagen: "/productos/Ferrari F40.png",
+      },
+
+      {
+        nombre: "Lamborghini Aventador",
+        precio: 5990,
+        stock: 2,
+        categoria: "Deportivos",
+        imagen: "/productos/LAMBO.png",
+      },
+
+      {
+        nombre: "Ford Mustang 1967",
+        precio: 3990,
+        stock: 5,
+        categoria: "Clásicos",
+        imagen: "/productos/Ford Mustang.png",
+      },
+    ]);
+
+  }
+
+}, []);
+
 const precios: { [key: string]: number } = {
   "Ferrari F40": 10990,
   "Lamborghini Aventador": 5990,
@@ -366,7 +387,10 @@ Productos Destacados
   >
 
     <Image
-      src={producto.imagen}
+      src={
+  producto.imagen ||
+  "/productos/Ferrari F40.png"
+}
       alt={producto.nombre}
       width={500}
       height={300}
@@ -381,9 +405,9 @@ Productos Destacados
       ${producto.precio.toLocaleString("es-CL")}
     </p>
 
-    <p className="text-sm text-gray-400">
-      Stock: {stock[producto.nombre]}
-    </p>
+<p className="text-sm text-gray-400">
+  Stock: {producto.stock}
+</p>
 
     <p className="text-xs text-orange-400 mt-2">
       {producto.categoria}

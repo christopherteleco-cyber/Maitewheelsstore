@@ -15,12 +15,13 @@ const [stockNuevo, setStockNuevo] = useState("");
 
 const [categoria, setCategoria] = useState("Ferrari");
 
-  const [productos, setProductos] = useState([
+const [productos, setProductos] = useState([
   {
     nombre: "Ferrari F40",
     precio: 10990,
     stock: 2,
     categoria: "Ferrari",
+    imagen: "/productos/Ferrari F40.png",
   },
 
   {
@@ -28,6 +29,7 @@ const [categoria, setCategoria] = useState("Ferrari");
     precio: 5990,
     stock: 3,
     categoria: "Deportivos",
+    imagen: "/productos/LAMBO.png",
   },
 
   {
@@ -35,6 +37,7 @@ const [categoria, setCategoria] = useState("Ferrari");
     precio: 3990,
     stock: 5,
     categoria: "Clásicos",
+    imagen: "/productos/Ford Mustang.png",
   },
 ]);
 
@@ -59,12 +62,20 @@ const agregarProducto = () => {
 
 const productosActualizados = [
   ...productos,
-  {
-    nombre,
-    precio: Number(precio),
-    stock: Number(stockNuevo),
-    categoria,
-  },
+{
+  nombre,
+  precio: Number(precio),
+  stock: Number(stockNuevo),
+  categoria,
+
+  imagen:
+    categoria === "Ferrari"
+      ? "/productos/Ferrari F40.png"
+      : categoria === "Deportivos"
+      ? "/productos/LAMBO.png"
+      : "/productos/Ford Mustang.png",
+}
+,
 ];
 
 setProductos(productosActualizados);
