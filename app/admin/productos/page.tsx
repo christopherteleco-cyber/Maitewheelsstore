@@ -15,6 +15,8 @@ const [stockNuevo, setStockNuevo] = useState("");
 
 const [categoria, setCategoria] = useState("Ferrari");
 
+const [imagen, setImagen] = useState("");
+
 const [productos, setProductos] = useState([
   {
     nombre: "Ferrari F40",
@@ -68,12 +70,14 @@ const productosActualizados = [
   stock: Number(stockNuevo),
   categoria,
 
-  imagen:
-    categoria === "Ferrari"
-      ? "/productos/Ferrari F40.png"
-      : categoria === "Deportivos"
-      ? "/productos/LAMBO.png"
-      : "/productos/Ford Mustang.png",
+imagen:
+  imagen !== ""
+    ? `/productos/${imagen}`
+    : categoria === "Ferrari"
+    ? "/productos/Ferrari F40.png"
+    : categoria === "Deportivos"
+    ? "/productos/LAMBO.png"
+    : "/productos/Ford Mustang.png",
 }
 ,
 ];
@@ -88,6 +92,7 @@ localStorage.setItem(
   setNombre("");
   setPrecio("");
   setStockNuevo("");
+  setImagen("");
 
 };
 
@@ -243,6 +248,16 @@ const eliminarProducto = (
   </option>
 
 </select>
+
+<input
+  type="text"
+  placeholder="Imagen (ej: ferrari-enzo.jpg)"
+  value={imagen}
+  onChange={(e) =>
+    setImagen(e.target.value)
+  }
+  className="w-full p-3 rounded bg-white text-black mb-3"
+/>
 
 <button
   onClick={agregarProducto}
