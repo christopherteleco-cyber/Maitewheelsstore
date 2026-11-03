@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 
@@ -38,23 +38,64 @@ const [categoria, setCategoria] = useState("Ferrari");
   },
 ]);
 
+useEffect(() => {
+
+  const productosGuardados =
+    localStorage.getItem("productos");
+
+  if (productosGuardados) {
+
+    setProductos(
+      JSON.parse(productosGuardados)
+    );
+
+  }
+
+}, []);
+
 const agregarProducto = () => {
 
   if (!nombre) return;
 
-  setProductos([
-    ...productos,
-    {
-      nombre,
-      precio: Number(precio),
-      stock: Number(stockNuevo),
-      categoria,
-    },
-  ]);
+const productosActualizados = [
+  ...productos,
+  {
+    nombre,
+    precio: Number(precio),
+    stock: Number(stockNuevo),
+    categoria,
+  },
+];
+
+setProductos(productosActualizados);
+
+localStorage.setItem(
+  "productos",
+  JSON.stringify(productosActualizados)
+);
 
   setNombre("");
   setPrecio("");
   setStockNuevo("");
+
+};
+
+const eliminarProducto = (
+  nombreProducto: string
+) => {
+
+  const productosActualizados =
+    productos.filter(
+      (producto) =>
+        producto.nombre !== nombreProducto
+    );
+
+  setProductos(productosActualizados);
+
+  localStorage.setItem(
+    "productos",
+    JSON.stringify(productosActualizados)
+  );
 
 };
 
@@ -243,11 +284,16 @@ const agregarProducto = () => {
     Stock: {producto.stock}
   </span>
 
-  <button
-    className="bg-red-600 px-3 py-1 rounded"
-  >
-    Eliminar
-  </button>
+<button
+  onClick={() =>
+    eliminarProducto(
+      producto.nombre
+    )
+  }
+  className="bg-red-600 px-3 py-1 rounded"
+>
+  Eliminar
+</button>
 
 </div>
 
