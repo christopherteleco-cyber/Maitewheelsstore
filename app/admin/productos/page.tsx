@@ -1,8 +1,21 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+
+
 
 export default function AdminProductos() {
 
-  const productos = [
+const [nombre, setNombre] = useState("");
+
+const [precio, setPrecio] = useState("");
+
+const [stockNuevo, setStockNuevo] = useState("");
+
+const [categoria, setCategoria] = useState("Ferrari");
+
+  const [productos, setProductos] = useState([
   {
     nombre: "Ferrari F40",
     precio: 10990,
@@ -23,7 +36,27 @@ export default function AdminProductos() {
     stock: 5,
     categoria: "Clásicos",
   },
-];
+]);
+
+const agregarProducto = () => {
+
+  if (!nombre) return;
+
+  setProductos([
+    ...productos,
+    {
+      nombre,
+      precio: Number(precio),
+      stock: Number(stockNuevo),
+      categoria,
+    },
+  ]);
+
+  setNombre("");
+  setPrecio("");
+  setStockNuevo("");
+
+};
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
@@ -35,26 +68,33 @@ export default function AdminProductos() {
       <div className="grid md:grid-cols-3 gap-4 mb-10">
 
   <div className="bg-zinc-900 p-6 rounded-xl">
+
     <p className="text-gray-400">
       Productos
     </p>
 
-    <h2 className="text-3xl font-bold">
-      2
-    </h2>
+{productos.length}
+    
   </div>
 
   <div className="bg-zinc-900 p-6 rounded-xl">
+
     <p className="text-gray-400">
       Stock Total
     </p>
 
     <h2 className="text-3xl font-bold">
-      10
+      {productos.reduce(
+  (total, producto) =>
+    total + producto.stock,
+  0
+)}
     </h2>
+
   </div>
 
   <div className="bg-zinc-900 p-6 rounded-xl">
+
     <p className="text-gray-400">
       Inventario Bajo
     </p>
@@ -62,6 +102,7 @@ export default function AdminProductos() {
     <h2 className="text-3xl font-bold text-yellow-500">
       1
     </h2>
+
   </div>
 
 </div>
@@ -104,29 +145,59 @@ export default function AdminProductos() {
           Nuevo Producto
         </h2>
 
-        <input
-          type="text"
-          placeholder="Nombre"
-          className="w-full p-3 rounded bg-white text-black mb-3"
-        />
+<input
+  type="text"
+  placeholder="Nombre"
+  value={nombre}
+  onChange={(e) => setNombre(e.target.value)}
+  className="w-full p-3 rounded bg-white text-black mb-3"
+/>
 
-        <input
-          type="number"
-          placeholder="Precio"
-          className="w-full p-3 rounded bg-white text-black mb-3"
-        />
 
-        <input
-          type="number"
-          placeholder="Stock"
-          className="w-full p-3 rounded bg-white text-black mb-3"
-        />
+<input
+  type="number"
+  placeholder="Precio"
+  value={precio}
+  onChange={(e) => setPrecio(e.target.value)}
+  className="w-full p-3 rounded bg-white text-black mb-3"
+/>
 
-        <button
-          className="bg-green-600 px-6 py-3 rounded-lg font-bold"
-        >
-          Guardar Producto
-        </button>
+<input
+  type="number"
+  placeholder="Stock"
+  value={stockNuevo}
+  onChange={(e) => setStockNuevo(e.target.value)}
+  className="w-full p-3 rounded bg-white text-black mb-3"
+/>
+
+<select
+  value={categoria}
+  onChange={(e) =>
+    setCategoria(e.target.value)
+  }
+  className="w-full p-3 rounded bg-white text-black mb-3"
+>
+
+  <option value="Ferrari">
+    Ferrari
+  </option>
+
+  <option value="Deportivos">
+    Deportivos
+  </option>
+
+  <option value="Clásicos">
+    Clásicos
+  </option>
+
+</select>
+
+<button
+  onClick={agregarProducto}
+  className="bg-green-600 px-6 py-3 rounded-lg font-bold"
+>
+  Guardar Producto
+</button>
 
       </div>
 
@@ -166,11 +237,20 @@ export default function AdminProductos() {
               {producto.nombre}
             </span>
 
-            <span>
-              Stock:
-              {" "}
-              {producto.stock}
-            </span>
+<div className="flex gap-3 items-center">
+
+  <span>
+    Stock: {producto.stock}
+  </span>
+
+  <button
+    className="bg-red-600 px-3 py-1 rounded"
+  >
+    Eliminar
+  </button>
+
+</div>
+
 
           </div>
 
