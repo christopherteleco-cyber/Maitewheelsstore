@@ -105,7 +105,19 @@ const [categoriaSeleccionada, setCategoriaSeleccionada] =
 // }, [pedidos]);
 
 const total = carrito.reduce(
-  (sum, producto) => sum + precios[producto],
+  (sum, nombreProducto) => {
+
+    const productoEncontrado =
+      productos.find(
+        (p) => p.nombre === nombreProducto
+      );
+
+    return (
+      sum +
+      (productoEncontrado?.precio || 0)
+    );
+
+  },
   0
 );
 
@@ -129,7 +141,9 @@ const nuevoPedido = {
   direccion,
   productos: carrito,
   total,
-  fecha: "26-10-2026",
+  fecha: new Date().toLocaleDateString(
+  "es-CL"
+),
 };
 
  const pedidosActualizados = [
