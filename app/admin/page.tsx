@@ -29,6 +29,7 @@ type Pedido = {
   cliente: string;
   total: number;
   fecha: string;
+  productos: string[];
 };
 
 const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -39,6 +40,24 @@ const ventasTotales = pedidos.reduce(
   0
 );
 
+const productosVendidos: Record<
+  string,
+  number
+> = {};
+
+pedidos.forEach((pedido) => {
+
+  pedido.productos?.forEach(
+    (producto: string) => {
+
+      productosVendidos[producto] =
+        (productosVendidos[producto] || 0)
+        + 1;
+
+    }
+  );
+
+});
 
 const [productos, setProductos] =
   useState<Producto[]>([]);
@@ -49,6 +68,59 @@ const productosCriticos =
       producto.stock <= 2
   );
 
+  const stockCritico =
+  productosCriticos.length;
+
+  const ventasPorCategoria = {
+
+  Ferrari: 0,
+
+  Deportivos: 0,
+
+  "Clásicos": 0,
+
+};
+
+
+
+pedidos.forEach((pedido) => {
+
+  pedido.productos?.forEach(
+    (productoPedido: string) => {
+
+      const productoEncontrado =
+        productos.find(
+          (producto) =>
+            producto.nombre ===
+            productoPedido
+        );
+
+      if (productoEncontrado) {
+
+        ventasPorCategoria[
+          productoEncontrado.categoria as keyof typeof ventasPorCategoria
+        ] += productoEncontrado.precio;
+
+      }
+
+    }
+  );
+
+});
+
+const categoriaLider =
+  Object.entries(
+    ventasPorCategoria
+  ).sort(
+    (a, b) => b[1] - a[1]
+  )[0];
+
+const productoLider =
+  Object.entries(productosVendidos)
+
+    .sort(
+      (a, b) => b[1] - a[1]
+    )[0];
 
 useEffect(() => {
 
@@ -133,19 +205,21 @@ if (productosGuardados) {
 
 </div>
 
+
+
       <div className="grid md:grid-cols-4 gap-6">
 
-        <div className="bg-zinc-900 p-6 rounded-xl">
+  <div className="bg-zinc-900 p-6 rounded-xl">
 
        <h2 className="text-lg">Pedidos</h2>
 
-<p className="text-4xl font-bold text-yellow-500">
-  {pedidos.length}
-</p>
+      <p className="text-4xl font-bold text-yellow-500">
+       {pedidos.length}
+       </p>
 
-        </div>
+</div>
 
-        <div className="bg-zinc-900 p-6 rounded-xl">
+<div className="bg-zinc-900 p-6 rounded-xl">
 
 <h2 className="text-lg">
   Ventas Totales
@@ -158,7 +232,7 @@ if (productosGuardados) {
   )}
 </p>
 
-        </div>
+ </div>
 
         <div className="bg-zinc-900 p-6 rounded-xl">
           
@@ -169,32 +243,184 @@ if (productosGuardados) {
 </p>
 
           
-        </div>
+</div>
 
-        <div className="bg-zinc-900 p-6 rounded-xl">
+<div className="bg-zinc-900 p-6 rounded-xl">
 
-<h2 className="text-lg">Productos</h2>
-<p className="text-4xl font-bold text-red-500">
+  <h2 className="text-lg">Productos</h2>
+  <p className="text-4xl font-bold text-red-500">
   {productos.length}
-</p>
+  </p>
 
-        </div>
+</div>
+
+<div className="bg-zinc-900 p-6 rounded-xl">
+
+  <h2 className="text-lg">
+    Stock Crítico
+  </h2>
+
+  <p className="text-4xl font-bold text-red-500">
+    {stockCritico}
+  </p>
+
+</div>
 
       </div>
 
       <div className="mt-10 bg-zinc-900 rounded-xl p-6">
-
-        <div className="mt-10 bg-zinc-900 rounded-xl p-6">
-
-  <h2 className="text-3xl font-bold mb-6">
-    Últimos Clientes
-  </h2>
 
   <div className="mt-10 bg-zinc-900 rounded-xl p-6">
 
   <h2 className="text-3xl font-bold mb-6 text-red-400">
     Inventario Crítico
   </h2>
+
+  <div className="mt-10 bg-zinc-900 rounded-xl p-6">
+
+  <h2 className="text-3xl font-bold mb-6 text-orange-400">
+    🏆 Productos Más Vendidos
+  </h2>
+
+<div className="mt-10 bg-zinc-900 rounded-xl p-6">
+
+  <h2 className="text-3xl font-bold mb-6 text-cyan-400">
+    💰 Ventas por Categoría
+  </h2>
+
+  <div className="space-y-3">
+
+    {Object.entries(
+      ventasPorCategoria
+    ).map(
+      ([categoria, monto]) => (
+
+        <div
+          key={categoria}
+          className="flex justify-between border-b border-zinc-700 pb-2"
+        >
+
+          <span>
+            {categoria}
+          </span>
+
+          <span className="text-cyan-400">
+            $
+            {monto.toLocaleString(
+              "es-CL"
+            )}
+          </span>
+
+        </div>
+
+      )
+    )}
+
+    <div className="mt-10 bg-zinc-900 p-6 rounded-xl">
+
+  <h2 className="text-2xl font-bold text-yellow-500 mb-4">
+    🏆 Producto Líder
+  </h2>
+
+  {productoLider ? (
+
+    <div>
+
+      <p className="text-3xl font-bold">
+        {productoLider[0]}
+      </p>
+
+      <p className="text-green-400 mt-2">
+        {productoLider[1]} ventas
+      </p>
+
+    </div>
+
+  ) : (
+
+    <p>
+      Sin ventas registradas.
+    </p>
+
+  )}
+
+</div>
+
+<div className="mt-10 bg-zinc-900 p-6 rounded-xl">
+
+  <h2 className="text-2xl font-bold text-cyan-400 mb-4">
+    🏆 Categoría Líder
+  </h2>
+
+  {categoriaLider ? (
+
+    <div>
+
+      <p className="text-3xl font-bold">
+        {categoriaLider[0]}
+      </p>
+
+      <p className="text-cyan-400 mt-2">
+        $
+        {categoriaLider[1].toLocaleString(
+          "es-CL"
+        )}
+      </p>
+
+    </div>
+
+  ) : (
+
+    <p>
+      Sin ventas registradas.
+    </p>
+
+  )}
+
+</div>
+
+  </div>
+
+</div>
+
+  <div className="space-y-3">
+
+    {Object.entries(productosVendidos)
+
+      .sort(
+        (a, b) => b[1] - a[1]
+      )
+
+      .slice(0, 5)
+
+      .map(([nombre, cantidad]) => (
+
+        <div
+          key={nombre}
+          className="flex justify-between border-b border-zinc-700 pb-2"
+        >
+
+          <span>
+            {nombre}
+          </span>
+
+          <span className="text-orange-400">
+            {cantidad} ventas
+          </span>
+
+        </div>
+
+      ))}
+
+  </div>
+
+          <div className="mt-10 bg-zinc-900 rounded-xl p-6">
+
+  <h2 className="text-3xl font-bold mb-6">
+    👥 Últimos Clientes
+  </h2>
+
+</div>
 
   {productosCriticos.length === 0 ? (
 
@@ -222,9 +448,14 @@ if (productosGuardados) {
         Categoría: {producto.categoria}
       </p>
 
-      <p className="text-red-400">
-        Stock: {producto.stock}
-      </p>
+<span className="text-red-400 font-bold">
+  Stock: {producto.stock}
+</span>
+
+<p className="text-yellow-400 text-sm">
+  Revisar reposición
+</p>
+
 
     </div>
 
@@ -303,7 +534,7 @@ if (productosGuardados) {
 </div>
 
         <h2 className="text-3xl font-bold mb-6">
-          Últimos Pedidos
+          📋 Últimos Pedidos
         </h2>
 
         <table className="w-full">
@@ -346,6 +577,7 @@ if (productosGuardados) {
         <td className="p-3">
           {pedido.cliente}
         </td>
+
 
 <td className="p-3">
   $
