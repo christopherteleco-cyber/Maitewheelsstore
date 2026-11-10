@@ -231,25 +231,24 @@ try {
 
 }
 
-const nuevoStock = { ...stock };
+await fetch(
+  "/api/productos/descontar-stock",
+  {
+    method: "POST",
 
-carrito.forEach((producto) => {
+    headers: {
+      "Content-Type":
+        "application/json",
+    },
 
-  if (nuevoStock[producto] > 0) {
-
-    nuevoStock[producto] -= 1;
-
+    body: JSON.stringify({
+      productos: carrito,
+    }),
   }
-
-});
-
-setStock(nuevoStock);
-
-localStorage.setItem(
-  "stock",
-  JSON.stringify(nuevoStock)
 );
+
   alert("Pedido creado correctamente");
+
 <tbody>
 
   {Object.entries(stock).map(
