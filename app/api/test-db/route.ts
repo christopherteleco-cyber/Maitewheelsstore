@@ -1,11 +1,13 @@
-import { sql } from "@/lib/db";
+import { sql } from "@/lib/postgres";
 
 export async function GET() {
 
   try {
 
     const result =
-      await sql`SELECT version()`;
+      await sql`
+        SELECT NOW() as fecha
+      `;
 
     return Response.json({
       success: true,
@@ -15,7 +17,7 @@ export async function GET() {
   } catch (error) {
 
     console.error(
-      "ERROR COMPLETO:",
+      "POSTGRES ERROR:",
       error
     );
 
