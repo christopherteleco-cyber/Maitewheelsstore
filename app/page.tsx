@@ -158,6 +158,34 @@ localStorage.setItem(
   JSON.stringify(pedidosActualizados)
 );
 
+fetch("/api/send-order", {
+
+  method: "POST",
+
+  headers: {
+    "Content-Type":
+      "application/json",
+  },
+
+  body: JSON.stringify({
+
+    cliente: nombre,
+
+    correo,
+
+    telefono,
+
+    direccion,
+
+    productos: carrito,
+
+    total,
+
+  }),
+
+});
+
+
 const clientesGuardados = JSON.parse(
   localStorage.getItem("clientes") || "[]"
 );
