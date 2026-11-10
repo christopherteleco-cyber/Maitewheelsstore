@@ -45,44 +45,35 @@ const [direccion, setDireccion] = useState("");
 
 useEffect(() => {
 
-  const productosGuardados =
-    localStorage.getItem("productos");
+  const cargarProductos =
+    async () => {
 
-  if (productosGuardados) {
+      try {
 
-    setProductos(
-      JSON.parse(productosGuardados)
-    );
+        const respuesta =
+          await fetch(
+            "/api/productos"
+          );
 
-  } else {
+        const datos =
+          await respuesta.json();
 
-    setProductos([
-      {
-        nombre: "Ferrari F40",
-        precio: 10990,
-        stock: 3,
-        categoria: "Ferrari",
-        imagen: "/productos/Ferrari F40.png",
-      },
+        setProductos(
+          datos
+        );
 
-      {
-        nombre: "Lamborghini Aventador",
-        precio: 5990,
-        stock: 2,
-        categoria: "Deportivos",
-        imagen: "/productos/LAMBO.png",
-      },
+      } catch (error) {
 
-      {
-        nombre: "Ford Mustang 1967",
-        precio: 3990,
-        stock: 5,
-        categoria: "Clásicos",
-        imagen: "/productos/Ford Mustang.png",
-      },
-    ]);
+        console.error(
+          "Error cargando productos:",
+          error
+        );
 
-  }
+      }
+
+    };
+
+  cargarProductos();
 
 }, []);
 
@@ -121,7 +112,7 @@ const total = carrito.reduce(
   0
 );
 
-const finalizarCompra = () => {
+const finalizarCompra = async () => {
 
   if (carrito.length === 0) {
     alert("Debe agregar productos");
@@ -146,17 +137,41 @@ const nuevoPedido = {
 ),
 };
 
- const pedidosActualizados = [
-  ...pedidos,
-  nuevoPedido,
-];
+try {
 
-setPedidos(pedidosActualizados);
+  const respuesta =
+    await fetch(
+      "/api/pedidos",
+      {
+        method: "POST",
 
-localStorage.setItem(
-  "pedidos",
-  JSON.stringify(pedidosActualizados)
-);
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify(
+          nuevoPedido
+        ),
+      }
+    );
+
+  const pedidoCreado =
+    await respuesta.json();
+
+  setPedidos([
+    pedidoCreado,
+    ...pedidos,
+  ]);
+
+} catch (error) {
+
+  console.error(
+    "Error creando pedido:",
+    error
+  );
+
+}
 
 fetch("/api/send-order", {
 
@@ -186,23 +201,35 @@ fetch("/api/send-order", {
 });
 
 
-const clientesGuardados = JSON.parse(
-  localStorage.getItem("clientes") || "[]"
-);
+try {
 
-const nuevoCliente = {
-  nombre,
-  correo,
-  telefono,
-  direccion,
-};
+  await fetch(
+    "/api/clientes",
+    {
+      method: "POST",
 
-clientesGuardados.push(nuevoCliente);
+      headers: {
+        "Content-Type":
+          "application/json",
+      },
 
-localStorage.setItem(
-  "clientes",
-  JSON.stringify(clientesGuardados)
-);
+      body: JSON.stringify({
+        nombre,
+        correo,
+        telefono,
+        direccion,
+      }),
+    }
+  );
+
+} catch (error) {
+
+  console.error(
+    "Error creando cliente:",
+    error
+  );
+
+}
 
 const nuevoStock = { ...stock };
 

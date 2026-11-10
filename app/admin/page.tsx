@@ -131,38 +131,54 @@ useEffect(() => {
     router.push("/login");
   }
 
-const clientesGuardados =
-  localStorage.getItem("clientes");
+const cargarDatos =
+  async () => {
 
-if (clientesGuardados) {
+    try {
 
-  setClientes(
-    JSON.parse(clientesGuardados)
-  );
+      const [
+        clientesRes,
+        pedidosRes,
+        productosRes,
+      ] = await Promise.all([
+        fetch("/api/clientes"),
+        fetch("/api/pedidos"),
+        fetch("/api/productos"),
+      ]);
 
-}
+      const clientesData =
+        await clientesRes.json();
 
-const pedidosGuardados =
-  localStorage.getItem("pedidos");
+      const pedidosData =
+        await pedidosRes.json();
 
-if (pedidosGuardados) {
+      const productosData =
+        await productosRes.json();
 
-  setPedidos(
-    JSON.parse(pedidosGuardados)
-  );
+      setClientes(
+        clientesData
+      );
 
-}
+      setPedidos(
+        pedidosData
+      );
 
-const productosGuardados =
-  localStorage.getItem("productos");
+      setProductos(
+        productosData
+      );
 
-if (productosGuardados) {
+    } catch (error) {
 
-  setProductos(
-    JSON.parse(productosGuardados)
-  );
+      console.error(
+        "Error cargando dashboard:",
+        error
+      );
 
-}
+    }
+
+  };
+
+cargarDatos();
 
 }, [router]);
 

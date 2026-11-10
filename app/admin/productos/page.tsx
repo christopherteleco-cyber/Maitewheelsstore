@@ -3,7 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-
+type Producto = {
+  id: number;
+  nombre: string;
+  precio: number;
+  stock: number;
+  categoria: string;
+  imagen: string;
+};
 
 export default function AdminProductos() {
 
@@ -21,85 +28,108 @@ const [productoEditando, setProductoEditando] =
   useState<string | null>(null);
 
 
-const [productos, setProductos] = useState([
-  {
-    nombre: "Ferrari F40",
-    precio: 10990,
-    stock: 2,
-    categoria: "Ferrari",
-    imagen: "/productos/Ferrari F40.png",
-  },
-
-  {
-    nombre: "Lamborghini Aventador",
-    precio: 5990,
-    stock: 3,
-    categoria: "Deportivos",
-    imagen: "/productos/LAMBO.png",
-  },
-
-  {
-    nombre: "Ford Mustang 1967",
-    precio: 3990,
-    stock: 5,
-    categoria: "Clásicos",
-    imagen: "/productos/Ford Mustang.png",
-  },
-]);
+const [productos, setProductos] =
+  useState<Producto[]>([]);
 
 useEffect(() => {
 
-  const productosGuardados =
-    localStorage.getItem("productos");
+  const cargarProductos =
+    async () => {
 
-  if (productosGuardados) {
+      try {
 
-    setProductos(
-      JSON.parse(productosGuardados)
-    );
+        const respuesta =
+          await fetch(
+            "/api/productos"
+          );
 
-  }
+        const datos =
+          await respuesta.json();
+
+        setProductos(
+          datos
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Error cargando productos:",
+          error
+        );
+
+      }
+
+    };
+
+  cargarProductos();
 
 }, []);
 
-const agregarProducto = () => {
-
+const agregarProducto = async () => {
 
   if (!nombre) return;
 
-  
+  try {
 
-const productosActualizados = [
-  ...productos,
-{
-  nombre,
-  precio: Number(precio),
-  stock: Number(stockNuevo),
-  categoria,
+    const nuevoProducto = {
 
-imagen:
-  imagen !== ""
-    ? `/productos/${imagen}`
-    : categoria === "Ferrari"
-    ? "/productos/Ferrari F40.png"
-    : categoria === "Deportivos"
-    ? "/productos/LAMBO.png"
-    : "/productos/Ford Mustang.png",
-}
-,
-];
+      nombre,
 
-setProductos(productosActualizados);
+      precio: Number(precio),
 
-localStorage.setItem(
-  "productos",
-  JSON.stringify(productosActualizados)
-);
+      stock: Number(stockNuevo),
 
-  setNombre("");
-  setPrecio("");
-  setStockNuevo("");
-  setImagen("");
+      categoria,
+
+      imagen:
+        imagen !== ""
+          ? `/productos/${imagen}`
+          : categoria === "Ferrari"
+          ? "/productos/Ferrari F40.png"
+          : categoria === "Deportivos"
+          ? "/productos/LAMBO.png"
+          : "/productos/Ford Mustang.png",
+
+    };
+
+    const respuesta =
+      await fetch(
+        "/api/productos",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify(
+            nuevoProducto
+          ),
+        }
+      );
+
+    const productoCreado =
+      await respuesta.json();
+
+    setProductos([
+      ...productos,
+      productoCreado,
+    ]);
+
+    setNombre("");
+    setPrecio("");
+    setStockNuevo("");
+    setImagen("");
+
+  } catch (error) {
+
+    console.error(
+      "Error creando producto:",
+      error
+    );
+
+  }
 
 };
 
@@ -137,61 +167,127 @@ const editarProducto = (producto: {
 
 };
 
-const actualizarProducto = () => {
+const actualizarProducto =
+  async () => {
 
-  const productosActualizados =
-    productos.map((producto) =>
+    const productoOriginal =
+      productos.find(
+        (producto) =>
+          producto.nombre ===
+          productoEditando
+      );
 
-      producto.nombre === productoEditando
-        ? {
-            ...producto,
-            nombre,
-            precio: Number(precio),
-            stock: Number(stockNuevo),
-            categoria,
-            imagen:
-              imagen !== ""
-                ? `/productos/${imagen}`
-                : producto.imagen,
+    if (!productoOriginal)
+      return;
+
+    try {
+
+      const respuesta =
+        await fetch(
+          "/api/productos",
+          {
+            method: "PUT",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify(
+              {
+                id:
+                  productoOriginal.id,
+
+                nombre,
+
+                precio:
+                  Number(precio),
+
+                stock:
+                  Number(stockNuevo),
+
+                categoria,
+
+                imagen:
+                  imagen !== ""
+                    ? `/productos/${imagen}`
+                    : productoOriginal.imagen,
+              }
+            ),
           }
-        : producto
+        );
 
-    );
+      const productoActualizado =
+        await respuesta.json();
 
-  setProductos(productosActualizados);
+      setProductos(
+        productos.map(
+          (producto) =>
+            producto.id ===
+            productoActualizado.id
+              ? productoActualizado
+              : producto
+        )
+      );
 
-  localStorage.setItem(
-    "productos",
-    JSON.stringify(productosActualizados)
-  );
+      setProductoEditando(
+        null
+      );
 
-  setProductoEditando(null);
+      setNombre("");
+      setPrecio("");
+      setStockNuevo("");
+      setImagen("");
 
-  setNombre("");
-  setPrecio("");
-  setStockNuevo("");
-  setImagen("");
+    } catch (error) {
 
-};
+      console.error(
+        "Error actualizando producto:",
+        error
+      );
 
-const eliminarProducto = (
-  nombreProducto: string
-) => {
+    }
 
-  const productosActualizados =
-    productos.filter(
-      (producto) =>
-        producto.nombre !== nombreProducto
-    );
+  };
 
-  setProductos(productosActualizados);
+  const eliminarProducto =
+  async (id: number) => {
 
-  localStorage.setItem(
-    "productos",
-    JSON.stringify(productosActualizados)
-  );
+    try {
 
-};
+      await fetch(
+        "/api/productos",
+        {
+          method: "DELETE",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            id,
+          }),
+        }
+      );
+
+      setProductos(
+        productos.filter(
+          (producto) =>
+            producto.id !== id
+        )
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Error eliminando producto:",
+        error
+      );
+
+    }
+
+  };
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
@@ -457,7 +553,7 @@ const eliminarProducto = (
 <button
   onClick={() =>
     eliminarProducto(
-      producto.nombre
+      producto.id
     )
   }
   className="bg-red-600 px-3 py-1 rounded"
