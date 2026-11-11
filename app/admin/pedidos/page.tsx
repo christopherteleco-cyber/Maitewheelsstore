@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 type Pedido = {
@@ -9,29 +9,50 @@ type Pedido = {
   correo: string;
   telefono: string;
   direccion: string;
-  productos: string[];
+  productos: string[] | string;
   total: number;
   fecha: string;
+  estado: string;
 };
 
 export default function AdminPedidos() {
 
 const [pedidos, setPedidos] = useState<Pedido[]>([]);
 
-const cargarPedidos = () => {
+useEffect(() => {
 
-const pedidosGuardados =
-    localStorage.getItem("pedidos");
+  const cargarPedidos =
+    async () => {
 
-  if (pedidosGuardados) {
+      try {
 
-    setPedidos(
-      JSON.parse(pedidosGuardados)
-    );
+        const respuesta =
+          await fetch(
+            "/api/pedidos"
+          );
 
-  }
+        const datos =
+          await respuesta.json();
 
-};
+        setPedidos(
+          datos
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Error cargando pedidos:",
+          error
+        );
+
+      }
+
+    };
+
+  cargarPedidos();
+
+}, []);
+
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
@@ -77,13 +98,6 @@ const pedidosGuardados =
         <h2 className="text-3xl font-bold mb-6">
           Pedidos Recibidos
         </h2>
-
- <button
-  onClick={cargarPedidos}
-  className="bg-blue-600 px-4 py-2 rounded-lg mb-6"
->
-  Cargar Pedidos Reales
-</button>
 
         <table className="w-full">
 
@@ -132,16 +146,20 @@ const pedidosGuardados =
   ${(pedido.total ?? 0).toLocaleString("es-CL")}
 </td>
 
-  <td className="p-3">
-  {pedido.productos?.join(", ")}
+<td className="p-3">
+  {typeof pedido.productos === "string"
+    ? JSON.parse(
+        pedido.productos
+      ).join(", ")
+    : pedido.productos?.join(", ")}
 </td>
 
      <td className="p-3">
 
-  <select
-    className="bg-zinc-800 p-2 rounded"
-    defaultValue="Pendiente"
-  >
+<select
+  className="bg-zinc-800 p-2 rounded"
+  defaultValue={pedido.estado || "Pendiente"}
+>
 
     <option>
       Pendiente

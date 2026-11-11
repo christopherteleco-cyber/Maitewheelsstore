@@ -106,3 +106,52 @@ export async function POST(
   }
 
 }
+
+export async function PUT(
+  request: Request
+) {
+
+  try {
+
+    const body =
+      await request.json();
+
+    const {
+      id,
+      estado,
+    } = body;
+
+    const pedido =
+      await sql`
+
+        UPDATE pedidos
+
+        SET estado = ${estado}
+
+        WHERE id = ${id}
+
+        RETURNING *;
+
+      `;
+
+    return Response.json(
+      pedido[0]
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    return Response.json(
+      {
+        error:
+          "Error actualizando pedido",
+      },
+      {
+        status: 500,
+      }
+    );
+
+  }
+
+}
