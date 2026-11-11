@@ -19,6 +19,54 @@ export default function AdminPedidos() {
 
 const [pedidos, setPedidos] = useState<Pedido[]>([]);
 
+const actualizarEstado =
+  async (
+    id: number,
+    estado: string
+  ) => {
+
+    try {
+
+      await fetch(
+        "/api/pedidos",
+        {
+          method: "PUT",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            id,
+            estado,
+          }),
+        }
+      );
+
+      setPedidos(
+        pedidos.map(
+          (pedido) =>
+            pedido.id === id
+              ? {
+                  ...pedido,
+                  estado,
+                }
+              : pedido
+        )
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Error actualizando estado:",
+        error
+      );
+
+    }
+
+  };
+
 useEffect(() => {
 
   const cargarPedidos =
@@ -158,7 +206,16 @@ useEffect(() => {
 
 <select
   className="bg-zinc-800 p-2 rounded"
-  defaultValue={pedido.estado || "Pendiente"}
+  value={
+    pedido.estado ||
+    "Pendiente"
+  }
+  onChange={(e) =>
+    actualizarEstado(
+      pedido.id,
+      e.target.value
+    )
+  }
 >
 
     <option>
