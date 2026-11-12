@@ -29,7 +29,7 @@ type Pedido = {
   cliente: string;
   total: number;
   fecha: string;
-  productos: string[];
+  productos: string[] | string;
 };
 
 const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -47,7 +47,12 @@ const productosVendidos: Record<
 
 pedidos.forEach((pedido) => {
 
-  pedido.productos?.forEach(
+  const productosPedido =
+    typeof pedido.productos === "string"
+      ? JSON.parse(pedido.productos)
+      : pedido.productos;
+
+  productosPedido?.forEach(
     (producto: string) => {
 
       productosVendidos[producto] =
@@ -85,7 +90,12 @@ const productosCriticos =
 
 pedidos.forEach((pedido) => {
 
-  pedido.productos?.forEach(
+  const productosPedido =
+    typeof pedido.productos === "string"
+      ? JSON.parse(pedido.productos)
+      : pedido.productos;
+
+  productosPedido?.forEach(
     (productoPedido: string) => {
 
       const productoEncontrado =
@@ -160,8 +170,10 @@ const cargarDatos =
       );
 
       setPedidos(
-        pedidosData
-      );
+  Array.isArray(pedidosData)
+    ? pedidosData
+    : []
+);
 
       setProductos(
         productosData
