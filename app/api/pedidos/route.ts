@@ -1,4 +1,9 @@
 import { sql } from "@/lib/postgres";
+import { Resend } from "resend";
+
+const resend = new Resend(
+  process.env.RESEND_API_KEY
+);
 
 export async function GET() {
 
@@ -83,6 +88,34 @@ export async function POST(
         RETURNING *;
 
       `;
+
+try {
+  await resend.emails.send({
+    from: "onboarding@resend.dev",
+    to: [
+      correo,
+      "maitewheels.store@gmail.com"
+    ],
+    subject: `Pedido #${pedido[0].id} recibido`,
+    html: `
+      <h2>Nuevo pedido recibido</h2>
+
+      <p><strong>Cliente:</strong> ${cliente}</p>
+      <p><strong>Correo:</strong> ${correo}</p>
+      <p><strong>Teléfono:</strong> ${telefono}</p>
+      <p><strong>Total:</strong> $${total}</p>
+
+      <hr>
+
+      <p>Gracias por comprar en Maite Wheels Store.</p>
+    `,
+  });
+} catch (emailError) {
+  console.error(
+    "Error enviando correo:",
+    emailError
+  );
+}
 
     return Response.json(
       pedido[0]
