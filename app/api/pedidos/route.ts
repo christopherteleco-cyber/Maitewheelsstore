@@ -21,15 +21,14 @@ export async function GET() {
 
     console.error(error);
 
-    return Response.json(
-      {
-        error:
-          "Error obteniendo pedidos",
-      },
-      {
-        status: 500,
-      }
-    );
+return Response.json(
+  {
+    error: String(error),
+  },
+  {
+    status: 500,
+  }
+);
 
   }
 
