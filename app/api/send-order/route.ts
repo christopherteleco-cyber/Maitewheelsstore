@@ -1,33 +1,45 @@
+import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(
-  process.env.RESEND_API_KEY
-);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function POST() {
+export async function GET() {
   try {
-    const data = await resend.emails.send({
-      from: "onboarding@resend.dev",
+    // Correo para el cliente
+    await resend.emails.send({
+      from: "JK Store <onboarding@resend.dev>",
       to: ["maitewheels.store@gmail.com"],
-      subject: "Prueba Resend",
-      html: "<h1>Correo de prueba desde JK Store</h1>",
+      subject: "Confirmación de pedido",
+      html: `
+        <h1>✅ Gracias por tu compra</h1>
+        <p>Tu pedido fue recibido correctamente.</p>
+      `,
     });
 
-    return Response.json({
+    // Correo para la tienda
+    await resend.emails.send({
+      from: "JK Store <onboarding@resend.dev>",
+      to: ["maitewheels.store@gmail.com"],
+      subject: "Nuevo pedido recibido",
+      html: `
+        <h1>📦 Nuevo pedido</h1>
+        <p>Se registró un nuevo pedido en JK Store.</p>
+      `,
+    });
+
+    return NextResponse.json({
       success: true,
-      data,
+      message: "Correos enviados",
     });
   } catch (error) {
     console.error(error);
 
-    return Response.json(
+    return NextResponse.json(
       {
         success: false,
-        error,
+        message: "Error enviando correos",
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }
