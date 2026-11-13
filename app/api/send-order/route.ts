@@ -10,6 +10,7 @@ export async function POST(req: Request) {
       correo,
       telefono,
       direccion,
+      productos,
       total,
     } = await req.json();
 
@@ -18,14 +19,21 @@ export async function POST(req: Request) {
       to: ["maitewheels.store@gmail.com"],
       subject: "Nuevo pedido recibido",
       html: `
-        <h2>📦 Nuevo pedido JK Store</h2>
+  <h2>📦 Nuevo pedido JK Store</h2>
 
-        <p><strong>Cliente:</strong> ${cliente}</p>
-        <p><strong>Correo:</strong> ${correo}</p>
-        <p><strong>Teléfono:</strong> ${telefono}</p>
-        <p><strong>Dirección:</strong> ${direccion}</p>
-        <p><strong>Total:</strong> $${total}</p>
-      `,
+  <p><strong>Cliente:</strong> ${cliente}</p>
+  <p><strong>Correo:</strong> ${correo}</p>
+  <p><strong>Teléfono:</strong> ${telefono}</p>
+  <p><strong>Dirección:</strong> ${direccion}</p>
+
+  <h3>Productos comprados:</h3>
+
+  <ul>
+    ${productos.map((p: string) => `<li>${p}</li>`).join("")}
+  </ul>
+
+  <p><strong>Total:</strong> $${total}</p>
+`,
     });
 
     console.log("Correo enviado:", resultado);
