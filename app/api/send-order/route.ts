@@ -10,33 +10,15 @@ export async function POST(req: Request) {
       correo,
       telefono,
       direccion,
-      productos,
       total,
     } = await req.json();
 
-    // Correo al cliente
-    await resend.emails.send({
-      from: "JK Store <onboarding@resend.dev>",
-      to: [correo],
-      subject: "Confirmación de pedido - JK Store",
-      html: `
-        <h1>✅ Gracias por tu compra</h1>
-
-        <p>Hola ${cliente}, hemos recibido tu pedido.</p>
-
-        <p><strong>Total:</strong> $${total}</p>
-
-        <p>Nos pondremos en contacto contigo pronto.</p>
-      `,
-    });
-
-    // Correo a la tienda
-    await resend.emails.send({
+    const resultado = await resend.emails.send({
       from: "JK Store <onboarding@resend.dev>",
       to: ["maitewheels.store@gmail.com"],
       subject: "Nuevo pedido recibido",
       html: `
-        <h2>📦 Nuevo pedido</h2>
+        <h2>📦 Nuevo pedido JK Store</h2>
 
         <p><strong>Cliente:</strong> ${cliente}</p>
         <p><strong>Correo:</strong> ${correo}</p>
@@ -46,15 +28,18 @@ export async function POST(req: Request) {
       `,
     });
 
+    console.log("Correo enviado:", resultado);
+
     return NextResponse.json({
       success: true,
     });
   } catch (error) {
-    console.error(error);
+    console.error("ERROR SEND-ORDER:", error);
 
     return NextResponse.json(
       {
         success: false,
+        error: String(error),
       },
       { status: 500 }
     );
