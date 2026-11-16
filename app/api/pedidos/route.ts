@@ -89,6 +89,12 @@ export async function POST(
 
       `;
 
+      const productosArray = productos as {
+  nombre: string;
+  cantidad: number;
+  precio: number;
+}[];
+
 try {
   await resend.emails.send({
     from: "onboarding@resend.dev",
@@ -98,17 +104,68 @@ try {
     ],
     subject: `Pedido #${pedido[0].id} recibido`,
     html: `
-      <h2>Nuevo pedido recibido</h2>
+<div style="font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px;">
 
-      <p><strong>Cliente:</strong> ${cliente}</p>
-      <p><strong>Correo:</strong> ${correo}</p>
-      <p><strong>Teléfono:</strong> ${telefono}</p>
-      <p><strong>Total:</strong> $${total}</p>
+  <h1 style="color:#d32f2f;">
+    🚗 Maite Wheels Store
+  </h1>
 
-      <hr>
+  <h2>Nuevo Pedido #${pedido[0].id}</h2>
 
-      <p>Gracias por comprar en Maite Wheels Store.</p>
-    `,
+  <hr />
+
+  <p><strong>Cliente:</strong> ${cliente}</p>
+  <p><strong>Correo:</strong> ${correo}</p>
+  <p><strong>Teléfono:</strong> ${telefono}</p>
+  <p><strong>Dirección:</strong> ${direccion}</p>
+
+  <hr />
+
+  <h3>Productos</h3>
+
+  <table
+    width="100%"
+    cellpadding="10"
+    cellspacing="0"
+    border="1"
+    style="border-collapse: collapse;"
+  >
+    <tr style="background:#f5f5f5;">
+      <th>Producto</th>
+      <th>Cantidad</th>
+      <th>Precio</th>
+    </tr>
+
+    ${productosArray
+      .map(
+  (p: {
+  nombre: string;
+  cantidad: number;
+  precio: number;
+}) => `
+
+    <tr>
+      <td>${p.nombre}</td>
+      <td>${p.cantidad}</td>
+      <td>$${p.precio}</td>
+    </tr>
+  `
+)
+      .join("")}
+  </table>
+
+  <h2 style="margin-top:20px;color:#2e7d32;">
+    Total: $${total}
+  </h2>
+
+  <hr />
+
+  <p>
+    Pedido generado correctamente en Maite Wheels Store.
+  </p>
+
+</div>
+`,
   });
 } catch (emailError) {
   console.error(
@@ -165,6 +222,7 @@ export async function PUT(
         RETURNING *;
 
       `;
+
 
     return Response.json(
       pedido[0]
