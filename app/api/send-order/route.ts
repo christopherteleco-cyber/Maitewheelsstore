@@ -15,18 +15,34 @@ export async function POST(req: Request) {
     } = await req.json();
 
     const resultado = await resend.emails.send({
-      from: "MaiteWheels Store <onboarding@resend.dev>",
-      to: ["maitewheels.store@gmail.com"],
-      subject: "Nuevo pedido recibido",
+  from: "MaiteWheels Store <onboarding@resend.dev>",
+  to: ["maitewheels.store@gmail.com", 
+      correo],
+      subject: "Confirmación de pedido - Maite Wheels Store",
       html: `
-  <h2>📦 Nuevo pedido MaiteWheels Store</h2>
+  <h2>✅ Pedido recibido correctamente</h2>
 
   <p><strong>Cliente:</strong> ${cliente}</p>
   <p><strong>Correo:</strong> ${correo}</p>
   <p><strong>Teléfono:</strong> ${telefono}</p>
   <p><strong>Dirección:</strong> ${direccion}</p>
 
+  
+
 <h3>Productos comprados</h3>
+
+<p>
+  Hemos recibido tu pedido correctamente.
+</p>
+
+<p>
+  Te contactaremos para coordinar la entrega.
+</p>
+
+<p>
+  Gracias por preferir
+  <strong>Maite Wheels Store</strong>.
+</p>
 
 <ul>
   ${productos
