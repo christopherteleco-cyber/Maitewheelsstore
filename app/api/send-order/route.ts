@@ -14,58 +14,75 @@ export async function POST(req: Request) {
       total,
     } = await req.json();
 
-    const resultado = await resend.emails.send({
-  from: "MaiteWheels Store <onboarding@resend.dev>",
-  to: ["maitewheels.store@gmail.com", 
-      correo],
-      subject: "Confirmación de pedido - Maite Wheels Store",
+    // 1. Correo para el CLIENTE
+    const resultadoCliente = await resend.emails.send({
+      from: "MaiteWheels Store <onboarding@resend.dev>",
+      to: correo,
+      subject: "Confirmación de tu pedido - Maite Wheels Store",
       html: `
-  <h2>✅ Pedido recibido correctamente</h2>
+  <h2>✅ ¡Gracias por tu compra, ${cliente}!</h2>
+
+  <p>Hemos recibido tu pedido correctamente y ya lo estamos preparando.</p>
+
+  <h3>Resumen de tu pedido</h3>
+
+  <ul>
+    ${productos
+      .map(
+        (p: string) => `<li>${p}</li>`
+      )
+      .join("")}
+  </ul>
+
+  <p><strong>Dirección de entrega:</strong> ${direccion}</p>
+
+  <hr />
+
+  <h2 style="color:#2e7d32;">
+    Total: $${total}
+  </h2>
+
+  <p>
+    Gracias por comprar en
+    <strong>Maite Wheels Store</strong>.
+  </p>
+`,
+    });
+
+    // 2. Correo interno para TI (la tienda)
+    const resultadoTienda = await resend.emails.send({
+      from: "MaiteWheels Store <onboarding@resend.dev>",
+      to: "maitewheels.store@gmail.com",
+      replyTo: correo,
+      subject: `Nuevo pedido de ${cliente} - Maite Wheels Store`,
+      html: `
+  <h2>🛒 Nuevo pedido recibido</h2>
 
   <p><strong>Cliente:</strong> ${cliente}</p>
   <p><strong>Correo:</strong> ${correo}</p>
   <p><strong>Teléfono:</strong> ${telefono}</p>
   <p><strong>Dirección:</strong> ${direccion}</p>
 
-  
+  <h3>Productos comprados</h3>
 
-<h3>Productos comprados</h3>
+  <ul>
+    ${productos
+      .map(
+        (p: string) => `<li>${p}</li>`
+      )
+      .join("")}
+  </ul>
 
-<p>
-  Hemos recibido tu pedido correctamente.
-</p>
+  <hr />
 
-<p>
-  Te contactaremos para coordinar la entrega.
-</p>
-
-<p>
-  Gracias por preferir
-  <strong>Maite Wheels Store</strong>.
-</p>
-
-<ul>
-  ${productos
-    .map(
-      (p: string) => `<li>${p}</li>`
-    )
-    .join("")}
-</ul>
-
-<hr />
-
-<h2 style="color:#2e7d32;">
-  Total: $${total}
-</h2>
-
-<p>
-  Gracias por comprar en
-  <strong>Maite Wheels Store</strong>.
-</p>
+  <h2 style="color:#2e7d32;">
+    Total: $${total}
+  </h2>
 `,
     });
 
-    console.log("Correo enviado:", resultado);
+    console.log("Correo cliente:", resultadoCliente);
+    console.log("Correo tienda:", resultadoTienda);
 
     return NextResponse.json({
       success: true,
