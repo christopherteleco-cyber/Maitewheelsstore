@@ -316,7 +316,7 @@ await fetch(
       <section
   className="relative flex flex-col justify-center items-center text-center h-[80vh] px-4 bg-cover bg-center"
   style={{
-    backgroundImage: "url('/banner.png')",
+    backgroundImage: "url('/Banner.png')",
   }}
 >
 
