@@ -15,24 +15,37 @@ export async function POST(req: Request) {
     } = await req.json();
 
     const resultado = await resend.emails.send({
-      from: "JK Store <onboarding@resend.dev>",
+      from: "MaiteWheels Store <onboarding@resend.dev>",
       to: ["maitewheels.store@gmail.com"],
       subject: "Nuevo pedido recibido",
       html: `
-  <h2>📦 Nuevo pedido JK Store</h2>
+  <h2>📦 Nuevo pedido MaiteWheels Store</h2>
 
   <p><strong>Cliente:</strong> ${cliente}</p>
   <p><strong>Correo:</strong> ${correo}</p>
   <p><strong>Teléfono:</strong> ${telefono}</p>
   <p><strong>Dirección:</strong> ${direccion}</p>
 
-  <h3>Productos comprados:</h3>
+<h3>Productos comprados</h3>
 
-  <ul>
-    ${productos.map((p: string) => `<li>${p}</li>`).join("")}
-  </ul>
+<ul>
+  ${productos
+    .map(
+      (p: string) => `<li>${p}</li>`
+    )
+    .join("")}
+</ul>
 
-  <p><strong>Total:</strong> $${total}</p>
+<hr />
+
+<h2 style="color:#2e7d32;">
+  Total: $${total}
+</h2>
+
+<p>
+  Gracias por comprar en
+  <strong>Maite Wheels Store</strong>.
+</p>
 `,
     });
 
