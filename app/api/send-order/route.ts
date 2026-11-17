@@ -5,14 +5,20 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
-    const {
-      cliente,
-      correo,
-      telefono,
-      direccion,
-      productos,
-      total,
-    } = await req.json();
+const {
+  pedidoId,
+  cliente,
+  correo,
+  telefono,
+  direccion,
+  productos,
+  total,
+} = await req.json();
+
+const numeroPedido =
+  `MW-${String(
+    pedidoId
+  ).padStart(6, "0")}`;
 
     // 1. Correo para el CLIENTE
     const resultadoCliente = await resend.emails.send({
@@ -21,6 +27,11 @@ export async function POST(req: Request) {
       subject: "Confirmación de tu pedido - Maite Wheels Store",
       html: `
   <h2>✅ ¡Gracias por tu compra, ${cliente}!</h2>
+
+  <p>
+  <strong>Número de pedido:</strong>
+  ${numeroPedido}
+</p>
 
   <p>Hemos recibido tu pedido correctamente y ya lo estamos preparando.</p>
 
@@ -57,6 +68,11 @@ export async function POST(req: Request) {
       subject: `Nuevo pedido de ${cliente} - Maite Wheels Store`,
       html: `
   <h2>🛒 Nuevo pedido recibido</h2>
+
+  <p>
+  <strong>Pedido:</strong>
+  ${numeroPedido}
+</p>
 
   <p><strong>Cliente:</strong> ${cliente}</p>
   <p><strong>Correo:</strong> ${correo}</p>

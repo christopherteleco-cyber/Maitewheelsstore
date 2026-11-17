@@ -137,6 +137,8 @@ const nuevoPedido = {
 ),
 };
 
+let pedidoCreado;
+
 try {
 
   const respuesta =
@@ -156,7 +158,7 @@ try {
       }
     );
 
-  const pedidoCreado =
+  pedidoCreado =
     await respuesta.json();
 
 
@@ -184,19 +186,13 @@ fetch("/api/send-order", {
   },
 
   body: JSON.stringify({
-
-    cliente: nombre,
-
-    correo,
-
-    telefono,
-
-    direccion,
-
-    productos: carrito,
-
-    total,
-
+   pedidoId: pedidoCreado.id,
+   cliente: nombre,
+   correo,
+   telefono,
+   direccion,
+   productos: carrito,
+   total,
   }),
 
 });

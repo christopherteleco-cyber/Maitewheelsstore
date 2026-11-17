@@ -189,9 +189,9 @@ useEffect(() => {
       className="border-b border-zinc-800"
     >
 
-      <td className="p-3">
-        #{pedido.id}
-      </td>
+     <td className="p-3 font-bold text-yellow-400">
+  MW-{String(pedido.id).padStart(6, "0")}
+</td>
 
       <td className="p-3">
         {pedido.cliente}
