@@ -30,6 +30,7 @@ type Pedido = {
   total: number;
   fecha: string;
   productos: string[] | string;
+  estado: string;
 };
 
 const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -39,6 +40,34 @@ const ventasTotales = pedidos.reduce(
     total + (pedido.total || 0),
   0
 );
+
+const ticketPromedio =
+  pedidos.length > 0
+    ? ventasTotales / pedidos.length
+    : 0;
+
+    <div className="bg-zinc-900 p-6 rounded-xl">
+
+  <h2 className="text-lg">
+    Ticket Promedio
+  </h2>
+
+  <p className="text-4xl font-bold text-cyan-400">
+    $
+    {ticketPromedio.toLocaleString(
+      "es-CL"
+    )}
+  </p>
+
+</div>
+
+
+const pedidosPendientes =
+  pedidos.filter(
+    (pedido) =>
+      pedido.estado ===
+      "Pendiente"
+  ).length;
 
 const productosVendidos: Record<
   string,
@@ -235,7 +264,7 @@ cargarDatos();
 
 
 
-      <div className="grid md:grid-cols-4 gap-6">
+  <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
 
   <div className="bg-zinc-900 p-6 rounded-xl">
 
@@ -269,8 +298,19 @@ cargarDatos();
 <p className="text-4xl font-bold text-blue-500">
   {clientes.length}
 </p>
-
           
+</div>
+
+<div className="bg-zinc-900 p-6 rounded-xl">
+
+  <h2 className="text-lg">
+    Pendientes
+  </h2>
+
+  <p className="text-4xl font-bold text-orange-500">
+    {pedidosPendientes}
+  </p>
+
 </div>
 
 <div className="bg-zinc-900 p-6 rounded-xl">

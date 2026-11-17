@@ -295,8 +295,8 @@ await fetch(
         <Image
   src="/logo.png"
   alt="Maite Wheels"
-  width={280}
-  height={100}
+  width={200}
+  height={70}
   priority
 />
 
