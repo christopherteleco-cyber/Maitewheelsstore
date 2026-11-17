@@ -27,10 +27,10 @@ const actualizarEstado =
 
     try {
 
-      await fetch(
-        "/api/pedidos",
-        {
-          method: "PUT",
+const respuesta = await fetch(
+  "/api/pedidos",
+  {
+    method: "PUT",
 
           headers: {
             "Content-Type":
@@ -43,6 +43,13 @@ const actualizarEstado =
           }),
         }
       );
+
+      const datos = await respuesta.json();
+
+console.log(
+  "Respuesta PUT:",
+  datos
+);
 
       setPedidos(
         pedidos.map(

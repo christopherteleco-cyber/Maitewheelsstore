@@ -81,7 +81,7 @@ export async function POST(
           ${direccion},
           ${JSON.stringify(productos ?? productos)},
           ${total},
-          ${fecha}
+          ${fecha},
           'Pendiente'
         )
 
