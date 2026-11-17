@@ -69,9 +69,9 @@ export async function POST(
           direccion,
           productos,
           total,
-          fecha
-
-        )
+          fecha,
+          estado
+          )
 
         VALUES (
 
@@ -82,7 +82,7 @@ export async function POST(
           ${JSON.stringify(productos ?? productos)},
           ${total},
           ${fecha}
-
+          'Pendiente'
         )
 
         RETURNING *;
@@ -95,6 +95,11 @@ export async function POST(
   precio: number;
 }[];
 
+const numeroPedido =
+  `MW-${String(
+    pedido[0].id
+  ).padStart(6, "0")}`;
+
 try {
   await resend.emails.send({
     from: "onboarding@resend.dev",
@@ -102,7 +107,7 @@ try {
       correo,
       "maitewheels.store@gmail.com"
     ],
-    subject: `Pedido #${pedido[0].id} recibido`,
+    subject: `${numeroPedido} recibido`,
     html: `
 <div style="font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px;">
 
@@ -110,7 +115,7 @@ try {
     🚗 Maite Wheels Store
   </h1>
 
-  <h2>Nuevo Pedido #${pedido[0].id}</h2>
+  <h2>Pedido ${numeroPedido}</h2>
 
   <hr />
 
