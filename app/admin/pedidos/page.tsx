@@ -181,25 +181,29 @@ useEffect(() => {
 
             <tr className="border-b border-zinc-700">
 
-              <th className="text-left p-3">
-                Pedido
-              </th>
+<th className="text-left p-3">
+  Pedido
+</th>
 
-              <th className="text-left p-3">
-                Cliente
-              </th>
+<th className="text-left p-3">
+  Cliente
+</th>
 
-              <th className="text-left p-3">
-                Fecha
-              </th>
+<th className="text-left p-3">
+  Fecha
+</th>
 
-              <th className="text-left p-3">
-                Total
-              </th>
+<th className="text-left p-3">
+  Total
+</th>
 
-              <th className="text-left p-3">
-                Estado
-              </th>
+<th className="text-left p-3">
+  Productos
+</th>
+
+<th className="text-left p-3">
+  Estado
+</th>
 
             </tr>
 
@@ -228,12 +232,16 @@ useEffect(() => {
   </td>
 
       <td className="p-3">
-        {pedido.fecha}
-      </td>
+  {pedido.cliente}
+</td>
 
-      <td className="p-3">
-        ${(pedido.total ?? 0).toLocaleString("es-CL")}
-      </td>
+<td className="p-3">
+  {pedido.fecha}
+</td>
+
+<td className="p-3">
+  ${(pedido.total ?? 0).toLocaleString("es-CL")}
+</td>
 
 <td className="p-3">
   {typeof pedido.productos === "string"
