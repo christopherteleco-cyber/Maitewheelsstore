@@ -227,9 +227,9 @@ useEffect(() => {
       className="border-b border-zinc-800"
     >
 
-  <td className="p-3 font-bold text-yellow-400">
+ <td className="p-3 font-bold text-yellow-400 whitespace-nowrap">
   MW-{String(pedido.id).padStart(6, "0")}
-  </td>
+</td>
 
       <td className="p-3">
   {pedido.cliente}

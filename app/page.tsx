@@ -292,9 +292,13 @@ await fetch(
       {/* MENÚ SUPERIOR */}
       <nav className="flex justify-between items-center p-6 border-b border-red-500">
 
-        <h1 className="text-3xl font-bold text-orange-400">
-          MAITEWHEELS
-        </h1>
+        <Image
+  src="/logo.png"
+  alt="Maite Wheels"
+  width={280}
+  height={100}
+  priority
+/>
 
           <div className="bg-red-600 text-white px-4 py-2 rounded-lg font-bold">
   🛒 Carrito ({carrito.length})
