@@ -20,6 +20,16 @@ const numeroPedido =
     pedidoId
   ).padStart(6, "0")}`;
 
+  console.log(
+  "pedidoId:",
+  pedidoId
+);
+
+console.log(
+  "numeroPedido:",
+  numeroPedido
+);
+
     // 1. Correo para el CLIENTE
     const resultadoCliente = await resend.emails.send({
       from: "MaiteWheels Store <onboarding@resend.dev>",
