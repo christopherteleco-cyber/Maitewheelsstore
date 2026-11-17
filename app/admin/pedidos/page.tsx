@@ -19,6 +19,9 @@ export default function AdminPedidos() {
 
 const [pedidos, setPedidos] = useState<Pedido[]>([]);
 
+const [filtroEstado, setFiltroEstado] =
+  useState("Todos");
+
 const actualizarEstado =
   async (
     id: number,
@@ -154,6 +157,24 @@ useEffect(() => {
           Pedidos Recibidos
         </h2>
 
+        <select
+  value={filtroEstado}
+  onChange={(e) =>
+    setFiltroEstado(
+      e.target.value
+    )
+  }
+  className="bg-zinc-800 p-2 rounded mb-4"
+>
+  <option>Todos</option>
+  <option>Pendiente</option>
+  <option>Pagado</option>
+  <option>Preparando</option>
+  <option>Enviado</option>
+  <option>Entregado</option>
+  <option>Cancelado</option>
+</select>
+
         <table className="w-full">
 
           <thead>
@@ -169,6 +190,10 @@ useEffect(() => {
               </th>
 
               <th className="text-left p-3">
+                Fecha
+              </th>
+
+              <th className="text-left p-3">
                 Total
               </th>
 
@@ -180,26 +205,35 @@ useEffect(() => {
 
           </thead>
 
+
 <tbody>
 
-  {pedidos.map((pedido) => (
+  
+
+  {pedidos
+  .filter(
+    (pedido) =>
+      filtroEstado === "Todos" ||
+      pedido.estado === filtroEstado
+  )
+  .map((pedido) => (
 
     <tr
       key={pedido.id}
       className="border-b border-zinc-800"
     >
 
-     <td className="p-3 font-bold text-yellow-400">
+  <td className="p-3 font-bold text-yellow-400">
   MW-{String(pedido.id).padStart(6, "0")}
-</td>
+  </td>
 
       <td className="p-3">
-        {pedido.cliente}
+        {pedido.fecha}
       </td>
 
- <td className="p-3">
-  ${(pedido.total ?? 0).toLocaleString("es-CL")}
-</td>
+      <td className="p-3">
+        ${(pedido.total ?? 0).toLocaleString("es-CL")}
+      </td>
 
 <td className="p-3">
   {typeof pedido.productos === "string"
